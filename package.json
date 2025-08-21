@@ -1,5 +1,8 @@
 {
   "name": "astro-blog-template",
+  "license": "MIT",
+  "author": "Carlos Ponton",
+  "repository": "git@github.com:carlosp1604/astro-blog-template.git",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -10,5 +13,8 @@
   },
   "dependencies": {
     "astro": "^5.13.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
   }
 }
