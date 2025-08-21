@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+@utility container {
+    padding-inline: 16px;
+    margin-inline: auto;
+    max-width: 100%;
+
+    @variant xl {
+        max-width: 1240px;
+    }
+
+    @variant 2xl {
+        max-width: 1496px;
+    }
+}
+
+@theme {
+    --font-sans: "Roboto", sans-serif;
+
+    /* Breakpoints */
+    --breakpoint-sm: 500px;
+    --breakpoint-tb: 600px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Light theme */
+    --color-body: #b9add2;
+    --color-text: #3c2f4f;
+    --color-secondary-text: #5d4f72;
+    --color-disabled: #9a8faf;
+    --color-surface: #dcd4ec;
+    --color-active: #c2b6dd;
+    --color-hover: #c8bde0;
+    --color-border: #9f94b7;
+    --color-input: #f3f0fa;
+
+    /* Dark Theme */
+    --color-body-dark: #bfbfbf;
+    --color-text-dark: #3c2f4f;
+    --color-secondary-text-dark: #5d4f72;
+    --color-disabled-dark: #9a8faf;
+    --color-surface-dark: #dcd4ec;
+    --color-active-dark: #c2b6dd;
+    --color-hover-dark: #c8bde0;
+    --color-border-dark: #9f94b7;
+    --color-input-dark: #f3f0fa;
+
+    /* Brand colors */
+    --color-brand-primary: #a0b8ff;
+    --color-brand-primary-dark: #6c87d6;
+    --color-brand-secondary: #dba6ff;
+    --color-brand-secondary-dark: #ffa9c0;
+
+    /* State colors */
+    --color-error: #ffb3b3;
+    --color-error-dark: #e57373;
+}
