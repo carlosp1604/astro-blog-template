@@ -1,0 +1,44 @@
+---
+---
+<script is:inline>
+    const theme = (() => {
+      const localStorageTheme = localStorage?.getItem('theme') ?? ''
+
+      if ([ 'dark', 'light' ].includes(localStorageTheme)) {
+        return localStorageTheme
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark'
+      }
+
+      return 'light'
+    })()
+
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light')
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    }
+
+    window.localStorage.setItem('theme', theme)
+
+    //Example implementation with a toggle button
+
+    /**
+     *     const handleToggleClick = () => {
+     *       const element = document.documentElement
+     *
+     *       const isDark = element.getAttribute('data-theme') === 'dark'
+     *
+     *       if (isDark) {
+     *         element.removeAttribute('data-theme')
+     *       } else {
+     *         element.setAttribute('data-theme', 'dark')
+     *       }
+     *
+     *       localStorage.setItem('theme', !isDark ? 'dark' : 'light')
+     *     }
+     *
+     *     document.getElementById('themeToggle')?.addEventListener('click', handleToggleClick)
+     */
+</script>

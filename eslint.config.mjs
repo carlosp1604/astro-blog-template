@@ -33,6 +33,11 @@ export default tseslint.config(
       'astro/semi': [ 'error', 'never' ],
       indent: [ 'error', 2 ],
       '@stylistic/indent': 'off',
+      '@stylistic/quotes': [ 'error', 'single' ],
+      '@stylistic/object-curly-spacing': [ 'error', 'always' ],
+      '@stylistic/array-bracket-spacing': [ 'error' ,'always' ],
+      '@stylistic/curly-newline': [ 'error', 'always' ],
+      '@stylistic/type-annotation-spacing': 'error',
     },
   },
   {
