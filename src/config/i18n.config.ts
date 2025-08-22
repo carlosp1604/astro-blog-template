@@ -1,6 +1,6 @@
 const supportedLanguages = [ 'en', 'es' ] as const
 
-export const namespaces = [ 'common', 'home', 'post' ] as const
+export const namespaces = [ 'common', 'home', 'posts', 'categories' ] as const
 
 export type Locale = typeof supportedLanguages[number]
 export type Namespace = typeof namespaces[number]

@@ -1,1 +1,4 @@
-{}
+{
+  "home_page_description": "Esta es una plantilla de blog sencilla y totalmente personalizable creada con Astro.js. Puedes comenzar a agregar publicaciones y diseñar tu blog. TailwindCSS, eslint e i18n ya configurados. Optimizado para SEO",
+  "home_page_title": "Plantilla de blog creada con Astro.js"
+}

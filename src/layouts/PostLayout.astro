@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Seo, { type Hreflang } from '@/components/Seo.astro'
+import { getLocale } from '@/translations'
+
+interface Props {
+    title: string
+    description: string
+    hreflangs: Array<Hreflang>
+    canonical: string
+    publishedTime: string
+    modifiedTime: string
+    tags: Array<string>
+    author: string
+    image?: string
+}
+
+const {
+  title,
+  description,
+  canonical,
+  hreflangs,
+  publishedTime,
+  modifiedTime,
+  author,
+  tags,
+  image = ''
+} = Astro.props
+
+const siteName = import.meta.env.PUBLIC_SITE_NAME as string
+
+const lang = getLocale(Astro.url.pathname)
+---
+
+<BaseLayout>
+  <Seo
+    title={title}
+    description={description}
+    canonical={canonical}
+    lang={lang}
+    hreflangs={hreflangs}
+    ogImage={image}
+    type={'article'}
+    slot={'head'}
+    siteName={siteName}
+    publishedTime={publishedTime}
+    modifiedTime={modifiedTime}
+    author={author}
+    tags={tags}
+  />
+  <article>
+    <main>
+      <slot />
+    </main>
+  </article>
+</BaseLayout>

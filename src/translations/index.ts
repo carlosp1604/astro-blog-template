@@ -4,6 +4,8 @@ const modules = import.meta.glob('./*/**/*.json', { eager: false })
 
 const cache: Partial<Record<Locale, Partial<Record<Namespace, Record<string, unknown>>>>> = {}
 
+type Params = Record<string, string | number>
+
 async function loadNamespace(lang: Locale, ns: Namespace) {
   cache[lang] ||= {}
   if (!cache[lang]![ns]) {
@@ -35,12 +37,23 @@ function resolvePath(obj: Record<string, unknown>, path: string[]) {
   return cur
 }
 
-export async function t(lang: Locale, ns: Namespace, key: string): Promise<string> {
+function interpolate(str: string, params: Params): string {
+  return str.replace(/\{(\w+)\}/g, (_, match) =>
+    params[match] !== undefined ? String(params[match]) : `{${match}}`
+  )
+}
+
+export async function t(
+  lang: Locale,
+  ns: Namespace,
+  key: string,
+  params: Params = {}
+): Promise<string> {
   const data = await loadNamespace(lang, ns)
   const found = resolvePath(data, key.split('.'))
 
   if (found !== undefined) {
-    return String(found)
+    return interpolate(String(found), params)
   }
 
   if (lang !== i18nConfig.defaultLocale) {
@@ -48,7 +61,7 @@ export async function t(lang: Locale, ns: Namespace, key: string): Promise<strin
     const v = resolvePath(fb, key.split('.'))
 
     if (v !== undefined) {
-      return String(v)
+      return interpolate(String(v), params)
     }
   }
 

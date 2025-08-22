@@ -1,0 +1,22 @@
+---
+// eslint-disable-next-line no-restricted-imports,import/no-relative-parent-imports
+import '../styles/global.css'
+import { getLocale } from '@/translations'
+
+const lang = getLocale(Astro.url.pathname)
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index,follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+    <slot name="head"/>
+  </head>
+  <body class="bg-app-body text-app-text text-sm md:text-md lg:text-base font-sans">
+    <slot />
+  </body>
+</html>
