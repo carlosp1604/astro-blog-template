@@ -1,0 +1,25 @@
+---
+import { t } from '@/translations'
+import { getLocale } from '@/translations'
+
+const lang = getLocale(Astro.url.pathname)
+
+const homeLinkTranslation = await t(lang, 'common', 'nav_bar_home_link_title')
+---
+
+<nav class="w-full border-b border-gray-200 dark:border-gray-700">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 h-16">
+    <a href="/" class="text-xl font-bold">
+      LOGO
+    </a>
+
+    <div class="hidden md:flex space-x-6">
+      <a
+        href={'/'}
+        class="text-gray-700 dark:text-gray-200 hover:underline"
+      >
+        { homeLinkTranslation }
+      </a>
+    </div>
+  </div>
+</nav>

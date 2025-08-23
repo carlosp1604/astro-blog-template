@@ -2,6 +2,8 @@
 // eslint-disable-next-line no-restricted-imports,import/no-relative-parent-imports
 import '../styles/global.css'
 import { getLocale } from '@/translations'
+import NavBar from '@/components/NavBar.astro'
+import Footer from '@/components/Footer.astro'
 
 const lang = getLocale(Astro.url.pathname)
 ---
@@ -16,7 +18,12 @@ const lang = getLocale(Astro.url.pathname)
     <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
     <slot name="head"/>
   </head>
-  <body class="bg-app-body text-app-text text-sm md:text-md lg:text-base font-sans">
+
+  <body class="min-h-screen flex flex-col bg-app-body text-app-text text-sm md:text-md lg:text-base font-sans">
+    <NavBar />
+
     <slot />
+
+    <Footer />
   </body>
 </html>

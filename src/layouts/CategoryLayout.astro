@@ -37,7 +37,8 @@ const description = await t(lang, 'categories', 'category_page_description',  { 
     slot={'head'}
     siteName={siteName}
   />
-  <main>
+
+  <main class="flex-1">
     <slot />
   </main>
 </BaseLayout>
