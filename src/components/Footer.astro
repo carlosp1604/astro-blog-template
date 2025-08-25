@@ -8,6 +8,7 @@ const siteName = import.meta.env.PUBLIC_SITE_NAME as string
 const year = String(new Date().getFullYear())
 const copyrightTranslation = await t(lang, 'common', 'footer_copyright_title', { siteName, year })
 const homeLinkTranslation = await t(lang, 'common', 'footer_home_link_title')
+const navigationFooterAriaLabelTranslation = await t(lang, 'common', 'footer_navigation_section_aria_label_title')
 ---
 
 <footer class="bg-app-surface text-app-text border-t border-app-border">
@@ -16,10 +17,14 @@ const homeLinkTranslation = await t(lang, 'common', 'footer_home_link_title')
       {copyrightTranslation}
     </p>
 
-    <nav aria-label="Footer navigation" class="flex gap-4">
-      <a href='/' class="text-sm hover:underline">
-        {homeLinkTranslation}
-      </a>
+    <nav aria-label={navigationFooterAriaLabelTranslation}>
+      <ul class="flex gap-4">
+        <li>
+          <a href='/' class="text-sm hover:underline">
+            {homeLinkTranslation}
+          </a>
+        </li>
+      </ul>
     </nav>
   </div>
 </footer>

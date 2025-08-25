@@ -1,44 +1,35 @@
 ---
 ---
+
 <script is:inline>
-    const theme = (() => {
-      const localStorageTheme = localStorage?.getItem('theme') ?? ''
+    (function () {
+      const stored = localStorage.getItem('theme')
 
-      if ([ 'dark', 'light' ].includes(localStorageTheme)) {
-        return localStorageTheme
-      }
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
+      const mq = window.matchMedia('(prefers-color-scheme: dark)')
+
+      function applySystemTheme() {
+        document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light')
       }
 
-      return 'light'
+      if (stored === 'dark' || stored === 'light') {
+        // Dark | Light
+        document.documentElement.setAttribute('data-theme', stored)
+      } else {
+        // System
+        applySystemTheme()
+        mq.addEventListener('change', applySystemTheme)
+      }
+
+      window.setTheme = function (mode) {
+        if (mode === 'light' || mode === 'dark') {
+          document.documentElement.setAttribute('data-theme', mode)
+          localStorage.setItem('theme', mode)
+        } else {
+          // Reset to "system"
+          localStorage.setItem('theme', 'system')
+          applySystemTheme()
+          mq.addEventListener('change', applySystemTheme)
+        }
+      }
     })()
-
-    if (theme === 'light') {
-      document.documentElement.setAttribute('data-theme', 'light')
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark')
-    }
-
-    window.localStorage.setItem('theme', theme)
-
-    //Example implementation with a toggle button
-
-    /**
-     *     const handleToggleClick = () => {
-     *       const element = document.documentElement
-     *
-     *       const isDark = element.getAttribute('data-theme') === 'dark'
-     *
-     *       if (isDark) {
-     *         element.removeAttribute('data-theme')
-     *       } else {
-     *         element.setAttribute('data-theme', 'dark')
-     *       }
-     *
-     *       localStorage.setItem('theme', !isDark ? 'dark' : 'light')
-     *     }
-     *
-     *     document.getElementById('themeToggle')?.addEventListener('click', handleToggleClick)
-     */
 </script>

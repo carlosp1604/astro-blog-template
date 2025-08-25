@@ -1,0 +1,51 @@
+---
+import { i18nConfig } from '@/config/i18n.config'
+import { getLocale, getLanguageHref, t } from '@/translations'
+
+const current = getLocale(Astro.url.pathname)
+
+interface LocaleWithHref {
+    href: string
+    locale: string
+}
+
+const hrefs: Array<LocaleWithHref> = i18nConfig.locales.map((locale) => {
+  return {
+    href: getLanguageHref(
+      locale,
+      Astro.url.pathname,
+      Astro.url.search,
+      Astro.url.hash
+    ),
+    locale: locale
+  }
+})
+
+const languageSwitcherAriaLabelTranslation = await t(current, 'common', 'language_switcher_aria_label_title')
+---
+
+<ul
+  role="list"
+  aria-label={languageSwitcherAriaLabelTranslation}
+  class="flex gap-3 items-center"
+>
+  {
+    hrefs.map((hrefWithLocale) => {
+      const isActive = hrefWithLocale.locale === current
+
+      return (
+        <li>
+          <a
+            href={hrefWithLocale.href}
+            data-locale={hrefWithLocale.locale}
+            aria-current={isActive ? 'true' : 'false'}
+            class={`text-sm px-2 py-1 rounded ${
+              isActive ? 'font-bold underline' : 'text-app-text hover:underline'
+            }`}
+          >
+            {hrefWithLocale.locale.toUpperCase()}
+          </a>
+        </li>
+      )
+    })}
+</ul>

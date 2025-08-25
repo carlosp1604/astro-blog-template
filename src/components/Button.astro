@@ -32,20 +32,22 @@ const variants: Record<string, string> = {
 const className = clsx(base, variants[variant])
 ---
 
-{href ? (
-  <a
-    href={href}
-    class={className}
-  >
-    <slot />
-  </a>
-) : (
-  <button
-    type={type}
-    disabled={disabled}
-    class={className}
-    {...rest}
-  >
-    <slot />
-  </button>
-)}
+{
+  href ? (
+    <a
+      href={href}
+      class={className}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      disabled={disabled}
+      class={className}
+      {...rest}
+    >
+      <slot />
+    </button>
+  )
+}

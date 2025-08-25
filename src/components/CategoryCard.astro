@@ -1,0 +1,79 @@
+---
+import { getLocale, t } from '@/translations'
+
+interface Props {
+    title: string
+    postCount: number
+    altTitle?: string
+    image?: string
+    href?: string
+}
+
+const {
+  title,
+  postCount,
+  altTitle,
+  image,
+  href
+} = Astro.props
+
+const lang = getLocale(Astro.url.pathname)
+
+const categoryCardAriaLabelTranslation = await t(lang, 'common', 'category_card_aria_label_title')
+
+const base =
+    'overflow-hidden rounded-xl border border-app-border bg-app-surface shadow-sm transition hover:shadow-md'
+
+let altTitleTranslation = altTitle
+
+if (!altTitleTranslation) {
+  altTitleTranslation = await t(lang, 'common', 'category_card_image_alt_title')
+}
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={base}
+      aria-label={categoryCardAriaLabelTranslation}
+    >
+      {image && (
+        <img
+          src={image}
+          alt={altTitleTranslation}
+          class="w-full aspect-video object-cover"
+        />
+      )}
+      <div class="p-4 space-y-1">
+        <h3 class="text-lg font-bold">
+          {title}
+        </h3>
+        <p class="text-sm font-light text-app-text-secondary">
+          {postCount} {postCount === 1 ? 'post' : 'posts'}
+        </p>
+      </div>
+    </a>
+  ) : (
+    <div
+      class={base}
+      aria-label={categoryCardAriaLabelTranslation}
+    >
+      {image && (
+        <img
+          src={image}
+          alt={altTitleTranslation}
+          class="w-full aspect-video object-cover"
+        />
+      )}
+      <div class="p-4 space-y-1">
+        <h3 class="text-lg font-bold">
+          {title}
+        </h3>
+        <p class="text-sm font-light text-app-text-secondary">
+          {postCount} {postCount === 1 ? 'post' : 'posts'}
+        </p>
+      </div>
+    </div>
+  )
+}

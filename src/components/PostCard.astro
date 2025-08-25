@@ -1,0 +1,84 @@
+---
+import { getLocale, t } from '@/translations'
+
+interface Props {
+    title: string
+    description: string
+    altTitle?: string
+    image?: string
+    href?: string
+}
+
+const {
+  title,
+  description,
+  altTitle,
+  image,
+  href,
+  ...rest
+} = Astro.props
+
+const lang = getLocale(Astro.url.pathname)
+
+const postCardAriaLabelTranslation = await t(lang, 'common', 'post_card_aria_label_title')
+
+const base =
+    'overflow-hidden rounded-xl border border-app-border bg-app-surface shadow-sm transition hover:shadow-md'
+
+let altTitleTranslation = altTitle
+
+if (!altTitleTranslation) {
+  altTitleTranslation = await t(lang, 'common', 'post_card_image_alt_title')
+}
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={base}
+      {...rest}
+      aria-label={postCardAriaLabelTranslation}
+    >
+      {
+        image &&
+        <img
+          src={image}
+          alt={altTitleTranslation}
+          class="w-full h-48 object-cover"
+        />
+      }
+      <div class="p-4 space-y-2">
+        <h3 class="text-lg font-semibold line-clamp-2">
+          {title}
+        </h3>
+        <p class="text-sm text-app-text-secondary line-clamp-4">
+          {description}
+        </p>
+      </div>
+    </a>
+  ) : (
+    <div
+      class={base}
+      {...rest}
+      aria-label={postCardAriaLabelTranslation}
+    >
+      {
+        image &&
+        <img
+          src={image}
+          alt={altTitleTranslation}
+          class="w-full h-48 object-cover"
+        />
+      }
+      <div class="p-4 space-y-2">
+        <h3 class="text-lg font-semibold line-clamp-2">
+          {title}
+        </h3>
+        <p class="text-sm text-app-text-secondary line-clamp-4">
+          {description}
+        </p>
+      </div>
+    </div>
+  )
+}

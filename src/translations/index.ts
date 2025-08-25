@@ -74,45 +74,23 @@ export function tKey(lang: Locale, fullKey: string) {
   return t(lang, ns, rest.join('.'))
 }
 
-export function getLanguageHref(target: Locale): string | void {
-  try {
-    if (!i18nConfig.locales.includes(target)) return
+export function getLanguageHref(
+  target: Locale,
+  currentPath: string,
+  search = '',
+  hash = ''
+): string {
+  const parts = (currentPath || '/').split('/').filter(Boolean)
 
-    const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '') || ''
-    const { pathname, search, hash } = window.location
+  parts[0] = target
 
-    const withoutBase = pathname.startsWith(base + '/')
-      ? pathname.slice(base.length)
-      : pathname
+  let path = '/' + parts.join('/')
 
-    const parts = withoutBase.split('/').filter(Boolean)
-    const hasLocale = parts.length > 0 && i18nConfig.locales.includes(parts[0] as Locale)
-
-    if (hasLocale) parts[0] = target
-    else parts.unshift(target)
-
-    const hadTrailing = pathname.endsWith('/')
-    const newPath = '/' + parts.join('/') + (hadTrailing ? '/' : '')
-
-    return base + newPath + search + hash
-  } catch (e) {
-    console.error('[i18n] getLanguageHref error:', e)
-
-    return
+  if (!path.endsWith('/')) {
+    path += '/'
   }
-}
 
-export function changeLanguage(target: Locale): void {
-  try {
-    const href = getLanguageHref(target)
-
-    if (!href) return
-    window.location.replace(href)
-  } catch (e) {
-    console.error('[i18n] changeLanguage error:', e)
-
-    return
-  }
+  return path + search + hash
 }
 
 export function getLocale(pathname: string): Locale {

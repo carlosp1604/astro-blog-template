@@ -5,18 +5,25 @@ import { getLocale } from '@/translations'
 const lang = getLocale(Astro.url.pathname)
 
 const homeLinkTranslation = await t(lang, 'common', 'nav_bar_home_link_title')
+const navBarAriaLabelTranslation = await t(lang, 'common', 'nav_bar_aria_label_title')
 ---
 
-<nav class="w-full border-b border-gray-200 dark:border-gray-700">
+<nav
+  class="w-full border-b border-app-border"
+  aria-label={navBarAriaLabelTranslation}
+>
   <div class="max-w-7xl mx-auto flex items-center justify-between px-4 h-16">
-    <a href="/" class="text-xl font-bold">
+    <a
+      href="/"
+      class="text-xl font-bold"
+    >
       LOGO
     </a>
 
     <div class="hidden md:flex space-x-6">
       <a
         href={'/'}
-        class="text-gray-700 dark:text-gray-200 hover:underline"
+        class="text-app-text-secondary hover:underline"
       >
         { homeLinkTranslation }
       </a>
