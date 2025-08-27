@@ -1,0 +1,71 @@
+[
+  {
+    "id": "cat-1",
+    "translations": {
+      "es": {
+        "name": "Desarrollo",
+        "description": "Artículos relacionados con desarrollo web"
+      },
+      "en": {
+        "name": "Development",
+        "description": "Articles related to web development"
+      }
+    },
+    "imageUrl": "/images/categories/desarrollo.jpg",
+    "imageAltTitle": {
+      "es": "Imagen de categoría Desarrollo",
+      "en": "Development category image"
+    },
+    "parentId": null,
+    "slugs": {
+      "es": "desarrollo",
+      "en": "development"
+    }
+  },
+  {
+    "id": "cat-2",
+    "translations": {
+      "es": {
+        "name": "Astro.js",
+        "description": "Tutoriales y guías sobre Astro.js"
+      },
+      "en": {
+        "name": "Astro.js",
+        "description": "Tutorials and guides about Astro.js"
+      }
+    },
+    "imageUrl": "/images/categories/astro.jpg",
+    "imageAltTitle": {
+      "es": "Logo de Astro.js",
+      "en": "Astro.js logo"
+    },
+    "parentId": null,
+    "slugs": {
+      "es": "astro",
+      "en": "astro"
+    }
+  },
+  {
+    "id": "cat-3",
+    "translations": {
+      "es": {
+        "name": "SEO",
+        "description": "Optimización para motores de búsqueda"
+      },
+      "en": {
+        "name": "SEO",
+        "description": "Search Engine Optimization"
+      }
+    },
+    "imageUrl": "/images/categories/seo.jpg",
+    "imageAltTitle": {
+      "es": "Ilustración de SEO",
+      "en": "SEO illustration"
+    },
+    "parentId": null,
+    "slugs": {
+      "es": "seo",
+      "en": "seo"
+    }
+  }
+]

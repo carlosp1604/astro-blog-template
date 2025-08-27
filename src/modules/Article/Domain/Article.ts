@@ -23,7 +23,7 @@ export class Article {
     title: string,
     description: string,
     imageUrl: string,
-    imageAltTitle: string,
+    imageAltTitle: string | null,
     authorName: string,
     publishedAt: Date,
     updatedAt: Date,
