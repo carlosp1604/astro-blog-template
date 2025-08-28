@@ -3,7 +3,7 @@ import type { ArticleRepositoryRelationshipsOptions } from '@/modules/Article/Do
 import type { ArticleRawModel } from '@/modules/Article/Infrastructure/ArticleRawModel.ts'
 import type { Category } from '@/modules/Category/Domain/Category.ts'
 import { CategoryModelTranslator } from '@/modules/Category/Infrastructure/CategoryModelTranslator.ts'
-import { RelationshipCollection } from '@/modules/Shared/Relationship/RelationshipCollection.ts'
+import { RelationshipCollection } from '@/modules/Shared/Domain/Relationship/RelationshipCollection.ts'
 
 export class ArticleModelTranslator {
   public static toDomain(

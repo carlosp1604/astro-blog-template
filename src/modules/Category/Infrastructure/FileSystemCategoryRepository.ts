@@ -1,8 +1,8 @@
-import type { Locale } from '@/config/i18n.config.ts'
 import type { Category } from '@/modules/Category/Domain/Category.ts'
 import type { CategoryRepositoryInterface } from '@/modules/Category/Domain/CategoryRepositoryInterface.ts'
 import { CategoryModelTranslator } from '@/modules/Category/Infrastructure/CategoryModelTranslator.ts'
 import type { CategoryRawModel } from '@/modules/Category/Infrastructure/CategoryRawModel.ts'
+import type { Locale, LocaleCode } from '@/modules/Shared/Domain/LocaleValueObject.ts'
 import articles from '~/data/articles.json'
 import categories from '~/data/categories.json'
 
@@ -33,15 +33,15 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
     }
 
     const rawChildrenCategories: Array<CategoryRawModel> = categories
-      .filter((child) => child.parentId === category.id && child.slugs[locale])
+      .filter((child) => child.parentId === category.id && child.slugs[locale.value])
       .map((child) => {
         return {
           id: child.id,
-          name: child.translations[locale].name,
-          description: child.translations[locale].description,
-          imageAltTitle: child.imageAltTitle[locale],
+          name: child.translations[locale.value].name,
+          description: child.translations[locale.value].description,
+          imageAltTitle: child.imageAltTitle[locale.value],
           postCount: null,
-          slug: child.slugs[locale],
+          slug: child.slugs[locale.value],
           imageUrl: child.imageUrl,
           parentId: child.parentId,
           parentCategory: undefined,
@@ -53,14 +53,14 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
 
     let rawParentCategory: CategoryRawModel | undefined = undefined
 
-    if (parentCategory && parentCategory.slugs[locale]) {
+    if (parentCategory && parentCategory.slugs[locale.value]) {
       rawParentCategory = {
         id: parentCategory.id,
-        name: parentCategory.translations[locale].name,
-        description: parentCategory.translations[locale].description,
-        imageAltTitle: parentCategory.imageAltTitle[locale],
+        name: parentCategory.translations[locale.value].name,
+        description: parentCategory.translations[locale.value].description,
+        imageAltTitle: parentCategory.imageAltTitle[locale.value],
         postCount: null,
-        slug: parentCategory.slugs[locale],
+        slug: parentCategory.slugs[locale.value],
         imageUrl: parentCategory.imageUrl,
         parentId: parentCategory.parentId,
         parentCategory: undefined,
@@ -70,12 +70,12 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
 
     return CategoryModelTranslator.toDomain({
       id: category.id,
-      name: category.translations[locale].name,
-      description: category.translations[locale].description,
-      imageAltTitle: category.imageAltTitle[locale],
+      name: category.translations[locale.value].name,
+      description: category.translations[locale.value].description,
+      imageAltTitle: category.imageAltTitle[locale.value],
       // FIXME: V1 -> Not optimized query
       postCount: articles.filter((article) => article.categories.includes(category.id)).length,
-      slug: category.slugs[locale],
+      slug: category.slugs[locale.value],
       imageUrl: category.imageUrl,
       parentId: category.parentId,
       parentCategory: rawParentCategory,
@@ -90,22 +90,37 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
     */
   public async getAllCategories(locale: Locale): Promise<Array<Category>> {
     return categories
-      .filter((category) => category.slugs[locale])
-      .sort((a, b) => CollatorFactory.get(locale).compare(a.translations[locale].name, b.translations[locale].name))
+      .filter((category) => category.slugs[locale.value])
+      .sort((a, b) => CollatorFactory.get(locale.value).compare(a.translations[locale.value].name, b.translations[locale.value].name))
       .map((category) => {
         return CategoryModelTranslator.toDomain({
           id: category.id,
-          name: category.translations[locale].name,
-          description: category.translations[locale].description,
-          imageAltTitle: category.imageAltTitle[locale],
+          name: category.translations[locale.value].name,
+          description: category.translations[locale.value].description,
+          imageAltTitle: category.imageAltTitle[locale.value],
           // FIXME: V1 -> Not optimized query
           postCount: articles.filter((article) => article.categories.includes(category.id)).length,
-          slug: category.slugs[locale],
+          slug: category.slugs[locale.value],
           imageUrl: category.imageUrl,
           parentId: category.parentId,
           parentCategory: undefined,
           childCategories: undefined,
         }, [])
       })
+  }
+
+  /**
+    * Get all slugs from a Category given its ID
+    * @param id Category ID
+    * @return Record<LocaleCode, string> or null if not found
+    */
+  public async getSlugsById(id: string): Promise<Record<LocaleCode, string> | null> {
+    const category = categories.find((category) => category.id === id)
+
+    if (!category) {
+      return null
+    }
+
+    return category.slugs as Record<LocaleCode, string>
   }
 }

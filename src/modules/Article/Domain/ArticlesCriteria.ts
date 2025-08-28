@@ -1,5 +1,5 @@
-import type { SortOrder } from '@/modules/Shared/CriteriaSortOrder.ts'
-import type { Locale } from '@/modules/Shared/LocaleValueObject.ts'
+import type { SortOrder } from '@/modules/Shared/Domain/CriteriaSortOrder.ts'
+import type { Locale } from '@/modules/Shared/Domain/LocaleValueObject.ts'
 
 export type ArticleSortBy = 'relevance' | 'date'
 export type ArticleSortOrder = SortOrder

@@ -1,4 +1,4 @@
-import { RelationshipDomainException } from '@/modules/Shared/Relationship/RelationshipDomainException.ts'
+import { RelationshipDomainException } from '@/modules/Shared/Domain/Relationship/RelationshipDomainException.ts'
 
 export class Relationship<T> {
   private readonly instance: T | undefined

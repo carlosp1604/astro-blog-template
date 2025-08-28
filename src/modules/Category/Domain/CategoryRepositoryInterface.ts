@@ -1,5 +1,5 @@
-import type { Locale } from '@/config/i18n.config.ts'
 import type { Category } from '@/modules/Category/Domain/Category.ts'
+import { Locale, type LocaleCode } from '@/modules/Shared/Domain/LocaleValueObject.ts'
 
 export type CategoryRepositoryRelationshipOptions = 'childrenCategories' | 'parentCategory'
 
@@ -18,4 +18,11 @@ export interface CategoryRepositoryInterface {
     * @return Array of Category
     */
   getAllCategories(locale: Locale): Promise<Array<Category>>
+
+  /**
+    * Get all slugs from a Category given its ID
+    * @param id Category ID
+    * @return Record<LocaleCode, string> or null if not found
+    */
+  getSlugsById(id: string): Promise<Record<LocaleCode, string> | null>
 }

@@ -1,5 +1,5 @@
-import { Relationship } from '@/modules/Shared/Relationship/Relationship.ts'
-import { RelationshipCollection } from '@/modules/Shared/Relationship/RelationshipCollection.ts'
+import { Relationship } from '@/modules/Shared/Domain/Relationship/Relationship.ts'
+import { RelationshipCollection } from '@/modules/Shared/Domain/Relationship/RelationshipCollection.ts'
 
 export class Category {
   public readonly id: string
@@ -12,7 +12,7 @@ export class Category {
   public readonly postCount: number
 
   /** Relationships **/
-  public readonly _parentCategory: Relationship<Category>
+  public readonly _parentCategory: Relationship<Category | null>
   public readonly _childCategories: RelationshipCollection<Category>
 
   constructor(
@@ -24,7 +24,7 @@ export class Category {
     imageAltTitle: string | null,
     parentId: string | null,
     postCount: number,
-    parentCategory: Relationship<Category> = Relationship.notLoaded(),
+    parentCategory: Relationship<Category | null> = Relationship.notLoaded(),
     childCategories: RelationshipCollection<Category> = RelationshipCollection.notLoaded(),
   ) {
     this.id = id
@@ -39,7 +39,7 @@ export class Category {
     this.postCount = postCount
   }
 
-  public get parentCategory (): Category {
+  public get parentCategory (): Category | null {
     return this._parentCategory.value
   }
 

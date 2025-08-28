@@ -1,4 +1,3 @@
-import type { Locale } from '@/config/i18n.config.ts'
 import type { Article } from '@/modules/Article/Domain/Article.ts'
 import type {
   ArticleRepositoryInterface
@@ -8,6 +7,7 @@ import type { ArticlesPage } from '@/modules/Article/Domain/ArticlesPage.ts'
 import { ArticleModelTranslator } from '@/modules/Article/Infrastructure/ArticleModelTranslator.ts'
 import type { ArticleRawModel } from '@/modules/Article/Infrastructure/ArticleRawModel.ts'
 import type { CategoryRawModel } from '@/modules/Category/Infrastructure/CategoryRawModel.ts'
+import { Locale, type LocaleCode } from '@/modules/Shared/Domain/LocaleValueObject.ts'
 import articles from '~/data/articles.json'
 import categories from '~/data/categories.json'
 
@@ -25,7 +25,7 @@ export class FileSystemArticleRepository implements ArticleRepositoryInterface {
         return false
       }
 
-      return article.locale === locale
+      return article.locale === locale.value
     })
 
     if (!article) {
@@ -37,16 +37,16 @@ export class FileSystemArticleRepository implements ArticleRepositoryInterface {
     })
 
     const processedCategories: Array<CategoryRawModel> = articleCategories
-      .filter((category) => category.slugs[locale])
+      .filter((category) => category.slugs[locale.value])
       .map((category) => {
 
         return {
           id: category.id,
-          name: category.translations[locale].name,
-          description: category.translations[locale].description,
-          imageAltTitle: category.imageAltTitle[locale],
+          name: category.translations[locale.value].name,
+          description: category.translations[locale.value].description,
+          imageAltTitle: category.imageAltTitle[locale.value],
           postCount: 0,
-          slug: category.slugs[locale],
+          slug: category.slugs[locale.value],
           imageUrl: category.imageUrl,
           parentId: category.parentId,
           parentCategory: undefined,
@@ -121,5 +121,20 @@ export class FileSystemArticleRepository implements ArticleRepositoryInterface {
       pageSize: limit,
       totalItems: filteredArticles.length,
     }
+  }
+
+  /**
+    * Get all slugs from an Article given its ID
+    * @param id Article ID
+    * @return Record<LocaleCode, string> or null if not found
+    */
+  public async getSlugsById(id: string): Promise<Record<LocaleCode, string> | null> {
+    const article = articles.find((article) => article.id === id)
+
+    if (!article) {
+      return null
+    }
+
+    return article.slugs as Record<LocaleCode, string>
   }
 }

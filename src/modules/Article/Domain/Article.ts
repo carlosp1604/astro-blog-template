@@ -1,6 +1,6 @@
 import { ArticleDomainException } from '@/modules/Article/Domain/ArticleDomainException.ts'
 import type { Category } from '@/modules/Category/Domain/Category.ts'
-import { RelationshipCollection } from '@/modules/Shared/Relationship/RelationshipCollection.ts'
+import { RelationshipCollection } from '@/modules/Shared/Domain/Relationship/RelationshipCollection.ts'
 
 export class Article {
   public readonly id: string
