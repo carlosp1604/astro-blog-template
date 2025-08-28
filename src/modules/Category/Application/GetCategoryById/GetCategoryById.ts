@@ -21,7 +21,7 @@ export class GetCategoryById {
 
   public async get(
     request: GetCategoryByIdApplicationRequestDto
-  ): Promise<Result<CategoryWithParentAndChildrenApplicationDto, Error>> {
+  ): Promise<Result<CategoryWithParentAndChildrenApplicationDto, GetCategoryByIdApplicationError>> {
     const category = await this.categoryRepository.getCategoryById(request.categoryId, Locale.create(
       request.locale, [ ...i18nConfig.locales ], i18nConfig.defaultLocale
     ))

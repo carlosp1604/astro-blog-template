@@ -12,7 +12,9 @@ export class GetCategorySlugsById {
   constructor(private categoryRepository: CategoryRepositoryInterface) {
   }
 
-  public async get (request: GetCategorySlugsByIdApplicationRequestDto): Promise<Result<TranslatedSlugApplicationDto, Error>> {
+  public async get (
+    request: GetCategorySlugsByIdApplicationRequestDto
+  ): Promise<Result<TranslatedSlugApplicationDto, GetCategorySlugsByIdApplicationError>> {
     const slugs = await this.categoryRepository.getSlugsById(request.id)
 
     if (!slugs) {
