@@ -1,0 +1,68 @@
+---
+import type { ArticleApplicationDto } from '@/modules/Article/Application/ArticleApplicationDto'
+import ArticleCard from './ArticleCard.astro'
+import { t } from '@/translations'
+import type { Locale } from '@/config/i18n.config'
+
+interface Props {
+    lang: Locale
+    articles: Array<ArticleApplicationDto>
+    page: number
+    hasNext: boolean
+    hasPrev: boolean
+    sortBy: string
+}
+
+const { lang, articles, page, hasNext, hasPrev, sortBy } = Astro.props
+
+const sortByTranslation = await t(lang, 'articles', 'article_card_gallery_sort_by_title')
+const sortByDateTranslation = await t(lang, 'articles', 'article_card_gallery_sort_by_date_title')
+const sortByRelevanceTranslation = await t(lang, 'articles', 'article_card_gallery_sort_by_relevance_title')
+const paginationAriaLabelTranslation = await t(lang, 'articles', 'article_card_gallery_aria_label_title')
+const paginationNextButtonTranslation = await t(lang, 'articles', 'article_card_gallery_pagination_next_button_title')
+const paginationPrevButtonTranslation = await t(lang, 'articles', 'article_card_gallery_pagination_previous_button_title')
+const paginationNButtonTranslation = await t(lang, 'articles', 'article_card_gallery_pagination_page_n_button_title', { pageNumber: page })
+const sectionTitleTranslation = await t(lang, 'articles', 'article_card_gallery_section_title')
+---
+
+<section aria-labelledby="articles-section-title">
+  <h2 id="articles-section-title" class="sr-only">
+    {sectionTitleTranslation}
+  </h2>
+  <div>
+    <label for="sort">{sortByTranslation}</label>
+    <select
+      id="sort"
+      name="sort"
+      onchange="location.href='?page=1&sort='+this.value"
+      aria-label={sortByTranslation}
+    >
+      <option value="date" selected={sortBy === 'date'}>{sortByDateTranslation}</option>
+      <option value="relevance" selected={sortBy === 'relevance'}>{sortByRelevanceTranslation}</option>
+    </select>
+  </div>
+
+  <ul class="grid grid-cols-2 tb:grid-cols-3 md:grid-cols-4 gap-2">
+    {articles.map((article) => (
+      <li>
+        <ArticleCard
+          description={article.description}
+          title={article.title}
+          href={`/${lang}/articles/${article.slug}`}
+          altTitle={article.imageAltTitle ?? undefined}
+          image={article.imageUrl}
+        />
+      </li>
+    ))}
+  </ul>
+
+  <nav aria-label={paginationAriaLabelTranslation}>
+    {hasPrev && (
+      <a href={`?page=${page - 1}&sort=${sortBy}`}>{paginationPrevButtonTranslation}</a>
+    )}
+    <span aria-current="page">{paginationNButtonTranslation}</span>
+    {hasNext && (
+      <a href={`?page=${page + 1}&sort=${sortBy}`}>{paginationNextButtonTranslation}</a>
+    )}
+  </nav>
+</section>

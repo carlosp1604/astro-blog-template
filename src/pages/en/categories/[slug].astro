@@ -1,0 +1,28 @@
+---
+import container from '~/container'
+import { GetCategoryBySlug } from '@/modules/Category/Application/GetCategoryBySlug/GetCategoryBySlug'
+import { getLocale } from '@/translations'
+import CategoryLayout from '@/layouts/CategoryLayout.astro'
+import CategoryHeader from '@/components/CategoryHeader.astro'
+
+const lang = getLocale(Astro.url.pathname)
+
+const getCategoryBySlugUseCase = container.resolve<GetCategoryBySlug>('getCategoryBySlug')
+
+const category = await getCategoryBySlugUseCase.get({ locale: lang, slug: 'astro' })
+
+if (!category.success) {
+  return new Response(null, { status: 404 })
+}
+
+export const prerender = false
+---
+
+<CategoryLayout name={category.value.name} hreflangs={[]} canonical={''} >
+  <main>
+    <CategoryHeader
+      lang={lang}
+      category={category.value}
+    />
+  </main>
+</CategoryLayout>

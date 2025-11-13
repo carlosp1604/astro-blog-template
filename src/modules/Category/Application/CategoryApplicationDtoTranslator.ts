@@ -10,7 +10,7 @@ export class CategoryApplicationDtoTranslator {
       description: domain.description,
       imageUrl: domain.imageUrl,
       imageAltTitle: domain.imageAltTitle,
-      postCount: domain.postCount,
+      articlesCount: domain.articlesCount,
     }
   }
 }

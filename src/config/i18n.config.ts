@@ -1,6 +1,8 @@
-const supportedLanguages = [ 'en', 'es' ] as const
+import { i18nConfig as i18nGlobalConfig } from '~/i18n.config.mjs'
 
-export const namespaces = [ 'common', 'home', 'posts', 'categories' ] as const
+const supportedLanguages = [ ...i18nGlobalConfig.locales ] as const
+
+export const namespaces = [ ...i18nGlobalConfig.namespaces ] as const
 
 export type Locale = typeof supportedLanguages[number]
 export type Namespace = typeof namespaces[number]
@@ -14,7 +16,7 @@ export interface I18nConfig {
 }
 
 export const i18nConfig: I18nConfig = {
-  defaultLocale: 'en',
+  defaultLocale: i18nGlobalConfig.defaultLocale,
   locales: supportedLanguages,
   namespaces
 }

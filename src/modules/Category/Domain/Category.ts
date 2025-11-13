@@ -9,7 +9,7 @@ export class Category {
   public readonly imageUrl: string | null
   public readonly imageAltTitle: string | null
   public readonly parentId: string | null
-  public readonly postCount: number
+  public readonly articlesCount: number
 
   /** Relationships **/
   public readonly _parentCategory: Relationship<Category | null>
@@ -23,7 +23,7 @@ export class Category {
     imageUrl: string | null,
     imageAltTitle: string | null,
     parentId: string | null,
-    postCount: number,
+    articlesCount: number,
     parentCategory: Relationship<Category | null> = Relationship.notLoaded(),
     childCategories: RelationshipCollection<Category> = RelationshipCollection.notLoaded(),
   ) {
@@ -36,7 +36,7 @@ export class Category {
     this.parentId = parentId
     this._parentCategory = parentCategory
     this._childCategories = childCategories
-    this.postCount = postCount
+    this.articlesCount = articlesCount
   }
 
   public get parentCategory (): Category | null {

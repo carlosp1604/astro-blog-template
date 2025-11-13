@@ -5,5 +5,5 @@ export interface CategoryApplicationDto {
   description: string
   imageUrl: string
   imageAltTitle: string
-  postCount: number
+  articlesCount: number
 }

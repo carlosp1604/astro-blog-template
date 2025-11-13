@@ -1,0 +1,15 @@
+{
+  "article_card_aria_label_title": "Read article: {title}",
+  "article_card_gallery_aria_label_title": "Pagination",
+  "article_card_gallery_pagination_next_button_title": "Next",
+  "article_card_gallery_pagination_page_n_button_title": "Page {pageNumber}",
+  "article_card_gallery_pagination_previous_button_title": "Previous",
+  "article_card_gallery_section_title": "Articles",
+  "article_card_gallery_sort_by_title": "Sort by:",
+  "article_card_gallery_sort_by_date_title": "Date",
+  "article_card_gallery_sort_by_relevance_title": "Relevance",
+  "article_card_image_alt_title": "Featured image of the article: {title}",
+  "articles_page_h1_title": "Articles",
+  "articles_page_title": "All articles",
+  "articles_page_description": "Browse the full list of articles, sorted by date for easy access to the latest content"
+}

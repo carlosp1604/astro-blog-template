@@ -1,12 +1,8 @@
 {
-  "category_card_image_alt_title": "Imagen destacada de la categoría: {title}",
-  "category_card_aria_label_title": "Ver artículos de la categoría: {title}",
   "footer_copyright_title": "{year} © {siteName}. Todos los derechos reservados",
   "footer_home_link_title": "Inicio",
   "footer_navigation_section_aria_label_title": "Navegación del pie de página",
   "language_switcher_aria_label_title": "Selector de lenguaje",
   "nav_bar_aria_label_title": "Navegación principal",
-  "nav_bar_home_link_title": "Inicio",
-  "post_card_image_alt_title": "Imagen destacada del artículo: {title}",
-  "post_card_aria_label_title": "Leer el artículo: {title}"
+  "nav_bar_home_link_title": "Inicio"
 }

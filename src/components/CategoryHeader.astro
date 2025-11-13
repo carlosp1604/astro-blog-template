@@ -1,0 +1,60 @@
+---
+import type { Locale } from '@/config/i18n.config'
+import type {
+  CategoryWithParentAndChildrenApplicationDto
+} from '@/modules/Category/Application/CategoryWithParentAndChildrenApplicationDto'
+
+interface Props {
+    lang: Locale
+    category: CategoryWithParentAndChildrenApplicationDto
+}
+
+const { lang, category } = Astro.props
+---
+
+<header class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold">{category.name}</h1>
+    {category.description && (
+      <p class="text-app-text-secondary mt-2">{category.description}</p>
+    )}
+  </div>
+
+  {category.imageUrl && (
+    <img
+      src={category.imageUrl}
+      alt={category.imageAltTitle ?? category.name}
+      class="w-full max-h-64 object-cover rounded-lg"
+    />
+  )}
+
+  {category.parentCategory && (
+    <div>
+      <span class="font-semibold">Categoría padre:</span>
+      <a
+        href={`/${lang}/categories/${category.parentCategory.slug}`}
+        class="ml-2 text-app-brand-primary hover:underline"
+      >
+        {category.parentCategory.name}
+      </a>
+    </div>
+  )}
+
+  {category.childrenCategories.length > 0 && (
+    <div>
+      <span class="font-semibold">Categorías hijas:</span>
+      <ul class="flex flex-wrap gap-3 mt-2">
+        {category.childrenCategories.map((child) => (
+          <li>
+            <a
+              href={`/${lang}/categories/${child.slug}`}
+              class="text-app-brand-primary hover:underline"
+            >
+              {child.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</header>

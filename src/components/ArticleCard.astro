@@ -20,7 +20,7 @@ const {
 
 const lang = getLocale(Astro.url.pathname)
 
-const postCardAriaLabelTranslation = await t(lang, 'common', 'post_card_aria_label_title')
+const articleCardAriaLabelTranslation = await t(lang, 'articles', 'article_card_aria_label_title')
 
 const base =
     'overflow-hidden rounded-xl border border-app-border bg-app-surface shadow-sm transition hover:shadow-md'
@@ -28,7 +28,7 @@ const base =
 let altTitleTranslation = altTitle
 
 if (!altTitleTranslation) {
-  altTitleTranslation = await t(lang, 'common', 'post_card_image_alt_title')
+  altTitleTranslation = await t(lang, 'articles', 'article_card_image_alt_title')
 }
 ---
 
@@ -38,7 +38,7 @@ if (!altTitleTranslation) {
       href={href}
       class={base}
       {...rest}
-      aria-label={postCardAriaLabelTranslation}
+      aria-label={articleCardAriaLabelTranslation}
     >
       {
         image &&
@@ -61,7 +61,7 @@ if (!altTitleTranslation) {
     <div
       class={base}
       {...rest}
-      aria-label={postCardAriaLabelTranslation}
+      aria-label={articleCardAriaLabelTranslation}
     >
       {
         image &&

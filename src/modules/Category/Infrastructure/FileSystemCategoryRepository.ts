@@ -20,13 +20,21 @@ class CollatorFactory {
 
 export class FileSystemCategoryRepository implements CategoryRepositoryInterface {
   /**
-    * Get a Category (with parent and children) given its ID
-    * @param id Category ID
-    * @param locale Language in which Category entity must be translated
-    * @return Category if found or null
-    */
-  public async getCategoryById(id: string, locale: Locale): Promise<Category | null> {
-    const category = categories.find((category) => category.id === id)
+     * Get a Category (with parent and children) given its slug
+     * @param slug Category slug
+     * @param locale Language in which Category entity must be translated
+     * @return Category if found or null
+     */
+  public async getCategoryBySlug(slug: string, locale: Locale): Promise<Category | null> {
+    const category = categories.find((category) => {
+      for (const translatedSlug of Object.values(category.slugs)) {
+        if (translatedSlug === slug) {
+          return true
+        }
+      }
+
+      return false
+    })
 
     if (!category) {
       return null
@@ -40,7 +48,7 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
           name: child.translations[locale.value].name,
           description: child.translations[locale.value].description,
           imageAltTitle: child.imageAltTitle[locale.value],
-          postCount: null,
+          articlesCount: null,
           slug: child.slugs[locale.value],
           imageUrl: child.imageUrl,
           parentId: child.parentId,
@@ -59,7 +67,7 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
         name: parentCategory.translations[locale.value].name,
         description: parentCategory.translations[locale.value].description,
         imageAltTitle: parentCategory.imageAltTitle[locale.value],
-        postCount: null,
+        articlesCount: null,
         slug: parentCategory.slugs[locale.value],
         imageUrl: parentCategory.imageUrl,
         parentId: parentCategory.parentId,
@@ -74,7 +82,7 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
       description: category.translations[locale.value].description,
       imageAltTitle: category.imageAltTitle[locale.value],
       // FIXME: V1 -> Not optimized query
-      postCount: articles.filter((article) => article.categories.includes(category.id)).length,
+      articlesCount: articles.filter((article) => article.categories.includes(category.id)).length,
       slug: category.slugs[locale.value],
       imageUrl: category.imageUrl,
       parentId: category.parentId,
@@ -99,7 +107,7 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
           description: category.translations[locale.value].description,
           imageAltTitle: category.imageAltTitle[locale.value],
           // FIXME: V1 -> Not optimized query
-          postCount: articles.filter((article) => article.categories.includes(category.id)).length,
+          articlesCount: articles.filter((article) => article.categories.includes(category.id)).length,
           slug: category.slugs[locale.value],
           imageUrl: category.imageUrl,
           parentId: category.parentId,

@@ -1,6 +1,11 @@
 {
-  "categories_page_title": "Explora todas las categorías",
+  "category_card_aria_label_title": "Ver artículos de la categoría: {title}",
+  "category_card_articles_count": "{articlesNumber} artículos",
+  "category_card_gallery_section_title": "Categorías",
+  "category_card_image_alt_title": "Imagen destacada de la categoría: {title}",
+  "category_page_description": "Explora todos los artículos relacionados con {name} en nuestro blog",
+  "category_page_title": "Artículos categorizadas por {category}",
   "categories_page_description": "Encuentra artículos organizados por temas para acceder fácilmente al contenido que más te interesa.",
-  "category_page_description": "Explora todos los posts relacionados con {name} en nuestro blog",
-  "category_page_title": "Publicaciones categorizadas por {category}"
+  "categories_page_h1_title": "Categorías",
+  "categories_page_title": "Explora todas las categorías"
 }

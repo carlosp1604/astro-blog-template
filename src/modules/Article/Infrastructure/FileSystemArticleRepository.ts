@@ -39,13 +39,12 @@ export class FileSystemArticleRepository implements ArticleRepositoryInterface {
     const processedCategories: Array<CategoryRawModel> = articleCategories
       .filter((category) => category.slugs[locale.value])
       .map((category) => {
-
         return {
           id: category.id,
           name: category.translations[locale.value].name,
           description: category.translations[locale.value].description,
           imageAltTitle: category.imageAltTitle[locale.value],
-          postCount: 0,
+          articlesCount: 0,
           slug: category.slugs[locale.value],
           imageUrl: category.imageUrl,
           parentId: category.parentId,

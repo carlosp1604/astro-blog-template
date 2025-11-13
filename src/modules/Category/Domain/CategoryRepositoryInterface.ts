@@ -5,12 +5,12 @@ export type CategoryRepositoryRelationshipOptions = 'childrenCategories' | 'pare
 
 export interface CategoryRepositoryInterface {
   /**
-    * Get a Category (with parent and children) given its ID
-    * @param id Category ID
+    * Get a Category (with parent and children) given its slug
+    * @param slug Category slug
     * @param locale Language in which Category entity must be translated
     * @return Category if found or null
     */
-  getCategoryById(id: string, locale: Locale): Promise<Category | null>
+  getCategoryBySlug(slug: string, locale: Locale): Promise<Category | null>
 
   /**
     * Get all categories given a locale

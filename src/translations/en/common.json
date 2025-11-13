@@ -1,12 +1,9 @@
 {
-  "category_card_image_alt_title": "Featured image of the category: {title}",
-  "category_card_aria_label_title": "See category {title} articles",
+
   "footer_copyright_title": "{year} © {siteName}. All rights reserved",
   "footer_home_link_title": "Home",
   "footer_navigation_section_aria_label_title": "Footer navigation",
   "language_switcher_aria_label_title": "Language Selector",
   "nav_bar_aria_label_title": "Main navigation",
-  "nav_bar_home_link_title": "Home",
-  "post_card_image_alt_title": "Featured image of the article: {title}",
-  "post_card_aria_label_title": "Read article: {title}"
+  "nav_bar_home_link_title": "Home"
 }

@@ -17,7 +17,7 @@ export interface CategoryWithParentAndChildrenApplicationDto {
   description: string
   imageUrl: string | null
   imageAltTitle: string | null
-  postCount: number
+  articlesCount: number
   parentCategory: ParentCategoryApplicationDto | null
   childrenCategories: Array<ChildCategoryApplicationDto>
 }

@@ -26,7 +26,7 @@ export class CategoryWithParentAndChildrenApplicationDtoTranslator {
       name: domain.name,
       slug: domain.slug,
       imageUrl: domain.imageUrl,
-      postCount: domain.postCount,
+      articlesCount: domain.articlesCount,
       imageAltTitle: domain.imageAltTitle,
       description: domain.description,
       parentCategory,

@@ -38,7 +38,7 @@ export class CategoryModelTranslator {
       rawModel.imageUrl,
       rawModel.imageAltTitle,
       rawModel.parentId,
-      rawModel.postCount ? rawModel.postCount : 0,
+      rawModel.articlesCount ? rawModel.articlesCount : 0,
       parentCategory,
       childrenCategories,
     )

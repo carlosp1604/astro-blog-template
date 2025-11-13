@@ -3,7 +3,7 @@ import { getLocale, t } from '@/translations'
 
 interface Props {
     title: string
-    postCount: number
+    articleCount: number
     altTitle?: string
     image?: string
     href?: string
@@ -11,7 +11,7 @@ interface Props {
 
 const {
   title,
-  postCount,
+  articleCount,
   altTitle,
   image,
   href
@@ -19,15 +19,15 @@ const {
 
 const lang = getLocale(Astro.url.pathname)
 
-const categoryCardAriaLabelTranslation = await t(lang, 'common', 'category_card_aria_label_title')
-
+const categoryCardAriaLabelTranslation = await t(lang, 'categories', 'category_card_aria_label_title')
+const categoryCardArticlesCountTranslation = await t(lang, 'categories', 'category_card_articles_count', { articlesNumber: articleCount })
 const base =
     'overflow-hidden rounded-xl border border-app-border bg-app-surface shadow-sm transition hover:shadow-md'
 
 let altTitleTranslation = altTitle
 
 if (!altTitleTranslation) {
-  altTitleTranslation = await t(lang, 'common', 'category_card_image_alt_title')
+  altTitleTranslation = await t(lang, 'categories', 'category_card_image_alt_title')
 }
 ---
 
@@ -50,7 +50,7 @@ if (!altTitleTranslation) {
           {title}
         </h3>
         <p class="text-sm font-light text-app-text-secondary">
-          {postCount} {postCount === 1 ? 'post' : 'posts'}
+          {categoryCardArticlesCountTranslation}
         </p>
       </div>
     </a>
@@ -71,7 +71,7 @@ if (!altTitleTranslation) {
           {title}
         </h3>
         <p class="text-sm font-light text-app-text-secondary">
-          {postCount} {postCount === 1 ? 'post' : 'posts'}
+          {categoryCardArticlesCountTranslation}
         </p>
       </div>
     </div>
