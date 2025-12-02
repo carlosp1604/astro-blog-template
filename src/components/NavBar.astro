@@ -1,32 +1,96 @@
 ---
+import LanguageSwitcher, { type LocaleWithHref } from './LanguageSwitcher.astro'
 import { t } from '@/translations'
-import { getLocale } from '@/translations'
+import { env } from '~/env.loader'
+import { getNavItems } from '@/modules/Shared/Infrastructure/Frontend/NavItems'
+import { isActiveLink } from '@/modules/Shared/Infrastructure/Frontend/Url'
+import type { Locale } from '@/config/i18n.config'
 
-const lang = getLocale(Astro.url.pathname)
+interface Props {
+  translatedPaths?: Array<LocaleWithHref>
+  lang: Locale
+}
 
-const homeLinkTranslation = await t(lang, 'common', 'nav_bar_home_link_title')
-const navBarAriaLabelTranslation = await t(lang, 'common', 'nav_bar_aria_label_title')
+const siteName = env.PUBLIC_SITE_NAME
+const logoUrl = env.PUBLIC_SITE_LOGO_URL
+
+const { translatedPaths, lang } = Astro.props
+
+const navItems = await getNavItems(lang)
+
+const currentPath = Astro.url.pathname
+
+const navBarMobileAriaLabel = await t(lang, 'common', 'nav_bar_aria_label_title')
+const navBarDesktopAriaLabel = await t(lang, 'common', 'nav_bar_aria_label_title')
 ---
 
-<nav
-  class="w-full border-b border-app-border"
-  aria-label={navBarAriaLabelTranslation}
->
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 h-16">
-    <a
-      href="/"
-      class="text-xl font-bold"
+<header class="w-full bg-app-body sticky top-0 z-50">
+  <div class="container mx-auto px-4 h-14 flex items-center justify-between">
+    {logoUrl ? (
+      <img
+        src={logoUrl}
+        alt={siteName}
+        class="h-8 w-auto object-contain"
+        width="120"
+        height="32"
+      />
+    ) : (
+      <span class="text-xl font-bold tracking-tight text-app-text">
+        {siteName}
+      </span>
+    )}
+    <nav
+      class="hidden md:flex items-center gap-1"
+      aria-label={navBarDesktopAriaLabel}
     >
-      LOGO
-    </a>
+      {navItems.map(item => {
+        const active = isActiveLink(currentPath, item.href, item.exact)
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              'px-3 py-1.5 rounded-md font-medium transition-colors duration-200',
+              active
+                ? 'bg-app-brand-primary not-dark:text-white'
+                : 'text-app-text-secondary hover:bg-app-hover'
+            ]}
+          >
+            {item.label}
+          </a>
+        )
+      })}
+    </nav>
 
-    <div class="hidden md:flex space-x-6">
-      <a
-        href={'/'}
-        class="text-app-text-secondary hover:underline"
-      >
-        { homeLinkTranslation }
-      </a>
+    <div class="flex items-center gap-4 flex-shrink-0">
+      <LanguageSwitcher
+        translatedPaths={translatedPaths}
+        lang={lang}
+      />
     </div>
   </div>
-</nav>
+
+  <nav
+    class="md:hidden overflow-x-auto scrollbar-hide"
+    aria-label={navBarMobileAriaLabel}
+  >
+    <div class="container mx-auto px-4 flex justify-center items-center gap-1 h-10">
+      {navItems.map(item => {
+        const active = isActiveLink(currentPath, item.href, item.exact)
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              'px-3 py-1.5 rounded-md font-medium whitespace-nowrap transition-colors',
+              active
+                ? 'bg-app-brand-primary not-dark:text-white'
+                : 'text-app-text-secondary hover:bg-app-hover'
+            ]}
+          >
+            {item.label}
+          </a>
+        )
+      })}
+    </div>
+  </nav>
+
+</header>

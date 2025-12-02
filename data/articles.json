@@ -1,0 +1,140 @@
+[
+  {
+    "id": "897e41e2-9696-4f97-a32f-22d5cd517c5b",
+    "locale": "es",
+    "slug": "introduccion-astro",
+    "slugs": {
+      "es": "introduccion-astro",
+      "en": "introduction-to-astro"
+    },
+    "title": "Introducción a Astro.js",
+    "description": "Un vistazo rápido a por qué Astro.js está cambiando el desarrollo web. Aprende sobre las islas de arquitectura.",
+    "imageUrl": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1200&q=80",
+    "imageAltTitle": "Formas abstractas 3D flotando en un fondo oscuro estilo espacial",
+    "authorName": "El Admin",
+    "publishedAt": "2025-10-20T10:00:00Z",
+    "updatedAt": "2025-10-20T10:00:00Z",
+    "relevance": 100,
+    "categories": ["a9b65999-c735-4f36-a7ee-0c95c6173408", "c77afa23-f825-4984-a8d9-32c9f133fd43"],
+    "tags": [ "d290f1ee-6c54-4b01-90e6-d701748f0851", "5a42336b-d3f2-4247-92f0-895662771903", "f47ac10b-58cc-4372-a567-0e02b2c3d479", "bf5d4c1f-6875-4fbd-bcfa-98089c749f96"],
+    "path": "introduccion-astro.mdx",
+    "readingTime": 120,
+    "status": "published",
+    "isFeatured": true
+  },
+  {
+    "id": "af7e6d64-de4d-4bff-a118-e6d77b517c70",
+    "locale": "en",
+    "slug": "introduction-to-astro",
+    "slugs": {
+      "es": "introduccion-astro",
+      "en": "introduction-to-astro"
+    },
+    "title": "Introduction to Astro.js",
+    "description": "A quick look at why Astro.js is changing web development. Learn about the islands architecture.",
+    "imageUrl": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1200&q=80",
+    "imageAltTitle": "Abstract 3D shapes floating on a dark space-like background",
+    "authorName": "El Admin",
+    "publishedAt": "2025-10-20T10:00:00Z",
+    "updatedAt": "2025-10-20T10:00:00Z",
+    "relevance": 100,
+    "categories": ["a9b65999-c735-4f36-a7ee-0c95c6173408", "c77afa23-f825-4984-a8d9-32c9f133fd43"],
+    "tags": [ "d290f1ee-6c54-4b01-90e6-d701748f0851", "5a42336b-d3f2-4247-92f0-895662771903", "f47ac10b-58cc-4372-a567-0e02b2c3d479", "bf5d4c1f-6875-4fbd-bcfa-98089c749f96"],
+    "path": "introduction-to-astro.mdx",
+    "status": "published",
+    "readingTime": 120,
+    "isFeatured": true
+  },
+  {
+    "id": "015543ee-9a03-4622-a7c4-535a15dc8f3c",
+    "locale": "es",
+    "slug": "seo-basico-desarrolladores",
+    "slugs": {
+      "es": "seo-basico-desarrolladores",
+      "en": "basic-seo-for-developers"
+    },
+    "title": "SEO Básico para Desarrolladores",
+    "description": "Conceptos clave de SEO que todo desarrollador web debería conocer para mejorar la visibilidad.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    "imageAltTitle": "Gráficos de análisis de datos en una pantalla de ordenador portátil",
+    "authorName": "El Admin",
+    "publishedAt": "2025-11-05T14:30:00Z",
+    "updatedAt": "2025-11-05T14:30:00Z",
+    "relevance": 80,
+    "categories": ["0b9ce242-6b67-4468-b8d6-7350b57cc0fd"],
+    "tags": ["46ead73c-4998-4eff-8d01-e2c6d777a862", "bf5d4c1f-6875-4fbd-bcfa-98089c749f96", "f47ac10b-58cc-4372-a567-0e02b2c3d479"],
+    "path": "seo-basico-desarrolladores.mdx",
+    "status": "published",
+    "readingTime": 120,
+    "isFeatured": true
+  },
+  {
+    "id": "0d041d49-7b4f-4ca4-aed6-9f7c80722f21",
+    "locale": "en",
+    "slug": "basic-seo-for-developers",
+    "slugs": {
+      "es": "seo-basico-desarrolladores",
+      "en": "basic-seo-for-developers"
+    },
+    "title": "Basic SEO for Developers",
+    "description": "Key SEO concepts every web developer should know to improve visibility.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    "imageAltTitle": "Data analytics charts on a laptop screen",
+    "authorName": "El Admin",
+    "publishedAt": "2025-11-05T14:30:00Z",
+    "updatedAt": "2025-11-05T14:30:00Z",
+    "relevance": 80,
+    "categories": ["0b9ce242-6b67-4468-b8d6-7350b57cc0fd"],
+    "tags": ["46ead73c-4998-4eff-8d01-e2c6d777a862", "bf5d4c1f-6875-4fbd-bcfa-98089c749f96", "f47ac10b-58cc-4372-a567-0e02b2c3d479"],
+    "path": "basic-seo-for-developers.mdx",
+    "status": "published",
+    "readingTime": 120,
+    "isFeatured": true
+  },
+  {
+    "id": "4935be7a-f395-4ba3-8489-8e3d26076bb3",
+    "locale": "es",
+    "slug": "rendimiento-web-avanzado",
+    "slugs": {
+      "es": "rendimiento-web-avanzado",
+      "en": "advanced-web-performance"
+    },
+    "title": "Rendimiento Web Avanzado",
+    "description": "Técnicas para optimizar la carga y renderizado de sitios web modernos. Más allá de lo básico.",
+    "imageUrl": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+    "imageAltTitle": "Primer plano de componentes de hardware y ciberseguridad con luces de neón",
+    "authorName": "El Admin",
+    "publishedAt": "2025-09-15T09:00:00Z",
+    "updatedAt": "2025-09-15T09:00:00Z",
+    "relevance": 90,
+    "categories": ["a9b65999-c735-4f36-a7ee-0c95c6173408", "0b9ce242-6b67-4468-b8d6-7350b57cc0fd"],
+    "tags": ["f47ac10b-58cc-4372-a567-0e02b2c3d479", "90d33815-15fd-47f3-9132-3f5366620909", "d290f1ee-6c54-4b01-90e6-d701748f0851", "46ead73c-4998-4eff-8d01-e2c6d777a862"],
+    "path": "rendimiento-web-avanzado.mdx",
+    "readingTime": 120,
+    "status": "published",
+    "isFeatured": false
+  },
+  {
+    "id": "7cd09003-ec5c-48bd-be98-b070b41286c2",
+    "locale": "en",
+    "slug": "advanced-web-performance",
+    "slugs": {
+      "es": "rendimiento-web-avanzado",
+      "en": "advanced-web-performance"
+    },
+    "title": "Advanced Web Performance",
+    "description": "Techniques for optimizing the loading and rendering of modern websites. Going beyond the basics.",
+    "imageUrl": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+    "imageAltTitle": "Close up of hardware components and cybersecurity with neon lights",
+    "authorName": "El Admin",
+    "publishedAt": "2025-09-15T09:00:00Z",
+    "updatedAt": "2025-09-15T09:00:00Z",
+    "relevance": 90,
+    "categories": ["a9b65999-c735-4f36-a7ee-0c95c6173408", "0b9ce242-6b67-4468-b8d6-7350b57cc0fd"],
+    "tags": ["f47ac10b-58cc-4372-a567-0e02b2c3d479", "90d33815-15fd-47f3-9132-3f5366620909", "d290f1ee-6c54-4b01-90e6-d701748f0851", "46ead73c-4998-4eff-8d01-e2c6d777a862"],
+    "readingTime": 120,
+    "path": "advanced-web-performance.mdx",
+    "status": "published",
+    "isFeatured": false
+  }
+]

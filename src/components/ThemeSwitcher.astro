@@ -1,35 +1,90 @@
 ---
+import { t } from '@/translations'
+import type { Locale } from '@/config/i18n.config'
+
+interface Props {
+  lang: Locale
+}
+
+const { lang } = Astro.props
+
+const themes = [
+  { id: 'light', label: await t(lang, 'common', 'theme_switcher_light_theme_title') },
+  { id: 'dark', label: await t(lang, 'common', 'theme_switcher_dark_theme_title') },
+  { id: 'system', label: await t(lang, 'common', 'theme_switcher_system_theme_title') }
+]
+
+const ariaLabel = await t(lang, 'common', 'theme_switcher_aria_label')
 ---
 
+<ul
+  role="list"
+  aria-label={ariaLabel}
+  class="flex gap-1 items-center bg-app-surface rounded-md"
+>
+  {
+    themes.map((theme) => (
+      <li>
+        <button
+          type="button"
+          class="theme-btn px-2 py-1 rounded text-app-text hover:underline transition-all cursor-pointer"
+          data-value={theme.id}
+          onclick={`window.setTheme('${theme.id}')`}
+        >
+          {theme.label.toUpperCase()}
+        </button>
+      </li>
+    ))
+  }
+</ul>
+
 <script is:inline>
-    (function () {
-      const stored = localStorage.getItem('theme')
+  (function () {
+    const stored = localStorage.getItem('theme') || 'system'
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
 
-      const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    function applySystemTheme() {
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light')
+    }
 
-      function applySystemTheme() {
-        document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light')
+    function updateUI(mode) {
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('font-bold', 'underline')
+        btn.classList.add('text-app-text')
+        btn.setAttribute('aria-pressed', 'false')
+      })
+
+      const activeBtn = document.querySelector(`.theme-btn[data-value="${mode}"]`)
+
+      if (activeBtn) {
+        activeBtn.classList.remove('text-app-text')
+        activeBtn.classList.add('font-bold', 'underline')
+        activeBtn.setAttribute('aria-pressed', 'true')
       }
+    }
 
-      if (stored === 'dark' || stored === 'light') {
-        // Dark | Light
-        document.documentElement.setAttribute('data-theme', stored)
+    if (stored === 'dark' || stored === 'light') {
+      document.documentElement.setAttribute('data-theme', stored)
+    } else {
+      applySystemTheme()
+      mq.addEventListener('change', applySystemTheme)
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUI(stored)
+    })
+
+    window.setTheme = function (mode) {
+      if (mode === 'light' || mode === 'dark') {
+        document.documentElement.setAttribute('data-theme', mode)
+        localStorage.setItem('theme', mode)
+        mq.removeEventListener('change', applySystemTheme)
       } else {
-        // System
+        localStorage.setItem('theme', 'system')
         applySystemTheme()
         mq.addEventListener('change', applySystemTheme)
       }
-
-      window.setTheme = function (mode) {
-        if (mode === 'light' || mode === 'dark') {
-          document.documentElement.setAttribute('data-theme', mode)
-          localStorage.setItem('theme', mode)
-        } else {
-          // Reset to "system"
-          localStorage.setItem('theme', 'system')
-          applySystemTheme()
-          mq.addEventListener('change', applySystemTheme)
-        }
-      }
-    })()
+      updateUI(mode)
+    }
+  })()
 </script>

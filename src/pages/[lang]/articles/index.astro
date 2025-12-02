@@ -1,0 +1,36 @@
+---
+import ArticlesLayout from '@/layouts/ArticlesLayout.astro'
+import ArticleSearchBar from '@/components/ArticleSearchBar.astro'
+import ArticleCardGallery from '@/components/ArticleCardGallery.astro'
+import { loadArticlesPage } from '@/modules/Article/Infrastructure/Frontend/ArticlesPageLoader'
+
+const loadPageResult = await loadArticlesPage(Astro)
+
+if (loadPageResult instanceof Response) {
+  return loadPageResult
+}
+
+const { articlesPage, pagination, pageTitle, pageDescription, lang  } = loadPageResult
+
+export const prerender= false
+---
+
+<ArticlesLayout pagination={pagination} lang={lang}>
+  <div class="page-container flex flex-col gap-6 py-5 md:py-10">
+    <h1 class="heading-1">
+      {pageTitle}
+    </h1>
+    <p class="text-lead">
+      {pageDescription}
+    </p>
+    <ArticleSearchBar lang={lang}/>
+    <ArticleCardGallery
+      articles={articlesPage.articles}
+      lang={lang}
+      page={articlesPage.page}
+      hasNext={articlesPage.hasNext}
+      hasPrev={articlesPage.hasPrev}
+      sortBy={articlesPage.criteria.sortBy}
+    />
+  </div>
+</ArticlesLayout>

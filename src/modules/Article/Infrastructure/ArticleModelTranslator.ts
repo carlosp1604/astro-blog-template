@@ -1,9 +1,13 @@
 import { Article } from '@/modules/Article/Domain/Article.ts'
-import type { ArticleRepositoryRelationshipsOptions } from '@/modules/Article/Domain/ArticleRepositoryInterface.ts'
-import type { ArticleRawModel } from '@/modules/Article/Infrastructure/ArticleRawModel.ts'
-import type { Category } from '@/modules/Category/Domain/Category.ts'
-import { CategoryModelTranslator } from '@/modules/Category/Infrastructure/CategoryModelTranslator.ts'
+import { ArticleId } from '@/modules/Article/Domain/ValueObject/ArticleId.ts'
+import { ArticleSlug } from '@/modules/Article/Domain/ValueObject/ArticleSlug.ts'
+import { TagModelTranslator } from '@/modules/Tag/Infrastructure/TagModelTranslator.ts'
 import { RelationshipCollection } from '@/modules/Shared/Domain/Relationship/RelationshipCollection.ts'
+import { CategoryModelTranslator } from '@/modules/Category/Infrastructure/CategoryModelTranslator.ts'
+import type { Tag } from '@/modules/Tag/Domain/Tag.ts'
+import type { Category } from '@/modules/Category/Domain/Category.ts'
+import type { ArticleRawModel } from '@/modules/Article/Infrastructure/ArticleRawModel.ts'
+import type { ArticleRepositoryRelationshipsOptions } from '@/modules/Article/Domain/ArticleRepositoryInterface.ts'
 
 export class ArticleModelTranslator {
   public static toDomain(
@@ -15,23 +19,34 @@ export class ArticleModelTranslator {
     if (relationshipsOptions.includes('categories') && rawModel.categories) {
       categoriesCollection = RelationshipCollection.loaded(
         rawModel.categories.map((rawCategory) => {
-          return CategoryModelTranslator.toDomain(rawCategory)
+          return CategoryModelTranslator.toDomain(rawCategory, [])
+        })
+      )
+    }
+
+    let tagsCollection: RelationshipCollection<Tag> = RelationshipCollection.notLoaded()
+
+    if (relationshipsOptions.includes('tags') && rawModel.tags) {
+      tagsCollection = RelationshipCollection.loaded(
+        rawModel.tags.map((rawTag) => {
+          return TagModelTranslator.toDomain(rawTag)
         })
       )
     }
 
     return new Article(
-      rawModel.id,
-      rawModel.slug,
+      ArticleId.fromString(rawModel.id),
+      ArticleSlug.fromString(rawModel.slug),
       rawModel.title,
       rawModel.description,
       rawModel.imageUrl,
       rawModel.imageAltTitle,
       rawModel.authorName,
+      rawModel.readingTime,
       new Date(rawModel.publishedAt),
       new Date(rawModel.updatedAt),
-      rawModel.body,
-      categoriesCollection
+      categoriesCollection,
+      tagsCollection
     )
   }
 }

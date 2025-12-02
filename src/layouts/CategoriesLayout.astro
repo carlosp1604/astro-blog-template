@@ -1,39 +1,78 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import Seo, { type Hreflang } from '@/components/Seo.astro'
-import { getLocale, t } from '@/translations'
-import { i18nConfig } from '@/config/i18n.config'
+import Seo, { type BreadcrumbItem, type CollectionPage } from '@/components/Seo.astro'
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { QUERY_PARAM } from '@/modules/Shared/Infrastructure/Frontend/QueryParam'
+import { CATEGORIES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { type Locale, i18nConfig } from '@/config/i18n.config'
+import type { CategoriesPagePaginationData } from '@/modules/Category/Infrastructure/Frontend/CategoriesPageLoader'
+import {
+  buildCanonical,
+  buildHreflangs,
+  buildRelativeUrl
+} from '@/modules/Shared/Infrastructure/Frontend/Url'
 
-const lang = getLocale(Astro.url.pathname)
+interface Props {
+  pagination: CategoriesPagePaginationData
+  lang: Locale
+}
 
-const siteBaseUrl = import.meta.env.PUBLIC_SITE_BASE_URL as string
-const siteName = import.meta.env.PUBLIC_SITE_NAME as string
-const canonical = `${siteBaseUrl}/${lang}/categories`
+const { pagination, lang } = Astro.props
 
-const hreflangs: Array<Hreflang> = i18nConfig.locales.map((locale) => {
-  return {
-    lang: locale,
-    url: `${siteBaseUrl}/${locale}/categories`
-  }
-})
+const siteName = env.PUBLIC_SITE_NAME
+const siteBaseUrl = env.PUBLIC_SITE_BASE_URL
+
+const pageSearchParam = pagination.page > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${pagination.page}`) : undefined
+
+const canonical = buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH ], pageSearchParam), siteBaseUrl)
+const hreflangs = buildHreflangs(i18nConfig.locales, siteBaseUrl, (locale) => buildRelativeUrl(locale, [ CATEGORIES_PATH ], pageSearchParam))
 
 const title = await t(lang, 'categories', 'categories_page_title')
 const description = await t(lang, 'categories', 'categories_page_description')
+const categoriesBreadCrumbTranslation = await t(lang, 'categories', 'categories_breadcrumb_title')
+
+const breadCrumbs: Array<BreadcrumbItem> = [
+  { name: siteName, url: buildCanonical(buildRelativeUrl(lang), siteBaseUrl), position: 1 },
+  { name: categoriesBreadCrumbTranslation, url: canonical, position: 2 },
+]
+
+// FIXME: Set the correct params when pagination is supported
+let prevPageSearchParam = (pagination.page - 1) > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page - 1)}`) : undefined
+let nextPageSearchParam = new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page + 1)}`)
+
+const emptyCollection = pagination.categoriesSlugWithTitle.length === 0
+
+let collection: CollectionPage | undefined
+
+if (!emptyCollection) {
+  collection = {
+    prev: pagination.hasPrev ? buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH ], prevPageSearchParam), siteBaseUrl) : undefined,
+    next: pagination.hasNext ? buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH ], nextPageSearchParam), siteBaseUrl) : undefined,
+    totalItems: pagination.totalItems,
+    offset: pagination.offset,
+    items: pagination.categoriesSlugWithTitle.map((categorySlugWithTitle, index) => ({
+      url: buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH, categorySlugWithTitle.slug ]), siteBaseUrl),
+      position: pagination.offset + index + 1,
+      name: categorySlugWithTitle.title,
+    }))
+  }
+}
 ---
 
-<BaseLayout>
+<BaseLayout lang={lang} >
   <Seo
     title={title}
     description={description}
     canonical={canonical}
     lang={lang}
     hreflangs={hreflangs}
-    ogImage={'/og/categories.png'}
     type={'website'}
     slot={'head'}
-    siteName={siteName}
+    breadcrumbs={breadCrumbs}
+    collection={collection}
+    noIndex={emptyCollection}
   />
-
   <main class="flex-1">
     <slot />
   </main>

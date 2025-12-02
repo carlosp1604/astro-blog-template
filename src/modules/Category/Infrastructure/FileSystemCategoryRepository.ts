@@ -1,10 +1,13 @@
-import type { Category } from '@/modules/Category/Domain/Category.ts'
-import type { CategoryRepositoryInterface } from '@/modules/Category/Domain/CategoryRepositoryInterface.ts'
+import { asSafeLocale } from '@/modules/Shared/Infrastructure/SafeLocale.ts'
 import { CategoryModelTranslator } from '@/modules/Category/Infrastructure/CategoryModelTranslator.ts'
+import type { Locale } from '@/modules/Shared/Domain/LocaleValueObject.ts'
+import type { Category } from '@/modules/Category/Domain/Category.ts'
+import type { ArticleJsonModel } from '@/modules/Article/Infrastructure/ArticleJsonModel.ts'
 import type { CategoryRawModel } from '@/modules/Category/Infrastructure/CategoryRawModel.ts'
-import type { Locale, LocaleCode } from '@/modules/Shared/Domain/LocaleValueObject.ts'
-import articles from '~/data/articles.json'
-import categories from '~/data/categories.json'
+import type { CategoryJsonModel } from '@/modules/Category/Infrastructure/CategoryJsonModel.ts'
+import type { CategoryRepositoryInterface } from '@/modules/Category/Domain/CategoryRepositoryInterface.ts'
+import type { CategorySlug } from '@/modules/Category/Domain/ValueObject/CategorySlug.ts'
+import type { CategoryId } from '@/modules/Category/Domain/ValueObject/CategoryId.ts'
 
 class CollatorFactory {
   private static cache = new Map<string, Intl.Collator>()
@@ -19,16 +22,20 @@ class CollatorFactory {
 }
 
 export class FileSystemCategoryRepository implements CategoryRepositoryInterface {
+  constructor(
+    private readonly articles: Array<ArticleJsonModel>,
+    private readonly categories: Array<CategoryJsonModel>
+  ) {}
   /**
      * Get a Category (with parent and children) given its slug
      * @param slug Category slug
      * @param locale Language in which Category entity must be translated
      * @return Category if found or null
      */
-  public async getCategoryBySlug(slug: string, locale: Locale): Promise<Category | null> {
-    const category = categories.find((category) => {
+  public async getCategoryBySlug(slug: CategorySlug, locale: Locale): Promise<Category | null> {
+    const category = this.categories.find((category) => {
       for (const translatedSlug of Object.values(category.slugs)) {
-        if (translatedSlug === slug) {
+        if (translatedSlug === slug.value) {
           return true
         }
       }
@@ -40,50 +47,53 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
       return null
     }
 
-    const rawChildrenCategories: Array<CategoryRawModel> = categories
-      .filter((child) => child.parentId === category.id && child.slugs[locale.value])
+    const safeLocale = asSafeLocale(locale.value)
+
+    const rawChildrenCategories: Array<CategoryRawModel> = this.categories
+      .filter((child) => child.parentId === category.id && child.slugs[safeLocale])
       .map((child) => {
         return {
           id: child.id,
-          name: child.translations[locale.value].name,
-          description: child.translations[locale.value].description,
-          imageAltTitle: child.imageAltTitle[locale.value],
+          name: child.translations[safeLocale].name,
+          description: child.translations[safeLocale].description,
+          imageAltTitle: child.imageAltTitle[safeLocale],
           articlesCount: null,
-          slug: child.slugs[locale.value],
+          slug: child.slugs[safeLocale],
           imageUrl: child.imageUrl,
           parentId: child.parentId,
           parentCategory: undefined,
-          childCategories: undefined,
+          childCategories: undefined
         }
       })
 
-    const parentCategory = categories.find((parent) => parent.id === category.parentId)
+    const parentCategory = this.categories.find((parent) => parent.id === category.parentId)
 
     let rawParentCategory: CategoryRawModel | undefined = undefined
 
-    if (parentCategory && parentCategory.slugs[locale.value]) {
+    if (parentCategory && parentCategory.slugs[safeLocale]) {
       rawParentCategory = {
         id: parentCategory.id,
-        name: parentCategory.translations[locale.value].name,
-        description: parentCategory.translations[locale.value].description,
-        imageAltTitle: parentCategory.imageAltTitle[locale.value],
+        name: parentCategory.translations[safeLocale].name,
+        description: parentCategory.translations[safeLocale].description,
+        imageAltTitle: parentCategory.imageAltTitle[safeLocale],
         articlesCount: null,
-        slug: parentCategory.slugs[locale.value],
+        slug: parentCategory.slugs[safeLocale],
         imageUrl: parentCategory.imageUrl,
         parentId: parentCategory.parentId,
         parentCategory: undefined,
-        childCategories: undefined,
+        childCategories: undefined
       }
     }
 
     return CategoryModelTranslator.toDomain({
       id: category.id,
-      name: category.translations[locale.value].name,
-      description: category.translations[locale.value].description,
-      imageAltTitle: category.imageAltTitle[locale.value],
+      name: category.translations[safeLocale].name,
+      description: category.translations[safeLocale].description,
+      imageAltTitle: category.imageAltTitle[safeLocale],
       // FIXME: V1 -> Not optimized query
-      articlesCount: articles.filter((article) => article.categories.includes(category.id)).length,
-      slug: category.slugs[locale.value],
+      articlesCount: this.articles.filter((article) =>
+        article.categories.includes(category.id) && article.locale === safeLocale).length,
+      slug: category.slugs[safeLocale],
       imageUrl: category.imageUrl,
       parentId: category.parentId,
       parentCategory: rawParentCategory,
@@ -92,27 +102,30 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
   }
 
   /**
-    * Get all categories given a locale
-    * @param locale Language in which Categories entities must be translated
+    * Get all Categories given a locale
+    * @param locale Language in which Category entities must be translated
     * @return Array of Category
     */
   public async getAllCategories(locale: Locale): Promise<Array<Category>> {
-    return categories
-      .filter((category) => category.slugs[locale.value])
-      .sort((a, b) => CollatorFactory.get(locale.value).compare(a.translations[locale.value].name, b.translations[locale.value].name))
+    const safeLocale = asSafeLocale(locale.value)
+
+    return this.categories
+      .filter((category) => category.slugs[safeLocale])
+      .sort((a, b) => CollatorFactory.get(locale.value).compare(a.translations[safeLocale].name, b.translations[safeLocale].name))
       .map((category) => {
         return CategoryModelTranslator.toDomain({
           id: category.id,
-          name: category.translations[locale.value].name,
-          description: category.translations[locale.value].description,
-          imageAltTitle: category.imageAltTitle[locale.value],
+          name: category.translations[safeLocale].name,
+          description: category.translations[safeLocale].description,
+          imageAltTitle: category.imageAltTitle[safeLocale],
           // FIXME: V1 -> Not optimized query
-          articlesCount: articles.filter((article) => article.categories.includes(category.id)).length,
-          slug: category.slugs[locale.value],
+          articlesCount: this.articles.filter((article) =>
+            article.categories.includes(category.id) && article.locale === safeLocale).length,
+          slug: category.slugs[safeLocale],
           imageUrl: category.imageUrl,
           parentId: category.parentId,
           parentCategory: undefined,
-          childCategories: undefined,
+          childCategories: undefined
         }, [])
       })
   }
@@ -120,15 +133,15 @@ export class FileSystemCategoryRepository implements CategoryRepositoryInterface
   /**
     * Get all slugs from a Category given its ID
     * @param id Category ID
-    * @return Record<LocaleCode, string> or null if not found
+    * @return Record<string, string> or null if not found
     */
-  public async getSlugsById(id: string): Promise<Record<LocaleCode, string> | null> {
-    const category = categories.find((category) => category.id === id)
+  public async getSlugsById(id: CategoryId): Promise<Record<string, string> | null> {
+    const category = this.categories.find((category) => category.id === id.value)
 
     if (!category) {
       return null
     }
 
-    return category.slugs as Record<LocaleCode, string>
+    return category.slugs as Record<string, string>
   }
 }

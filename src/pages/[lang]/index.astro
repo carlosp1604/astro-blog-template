@@ -1,0 +1,37 @@
+---
+import HomePageLayout from '@/layouts/HomePageLayout.astro'
+import { i18nConfig } from '@/config/i18n.config'
+import { loadHomePage } from '@/modules/Shared/Infrastructure/Frontend/HomePageLoader'
+
+export async function getStaticPaths() {
+  const paths = []
+
+  for (const locale of i18nConfig.locales) {
+    paths.push({ params: { lang: locale } })
+  }
+
+  return paths
+}
+
+const loadPageResult = await loadHomePage(Astro)
+
+if (loadPageResult instanceof Response) {
+  return loadPageResult
+}
+
+const { articles, lang, pageTitle, pageDescription } = loadPageResult
+
+export const prerender= true
+---
+
+<HomePageLayout lang={lang}>
+  <div class="page-container flex flex-col gap-6 py-5 md:py-10">
+    <h1 class="heading-1">
+      { pageTitle }
+    </h1>
+    <p class="text-lead whitespace-pre-line">
+      {pageDescription}
+    </p>
+    <!-- Customize -->
+  </div>
+</HomePageLayout>

@@ -1,0 +1,137 @@
+---
+import { t } from '@/translations'
+import { i18nConfig, type Locale } from '@/config/i18n.config'
+import { TAGS_PATH, CATEGORIES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { buildRelativeUrl, buildCanonical } from '@/modules/Shared/Infrastructure/Frontend/Url'
+
+interface Props {
+  title: string
+  image?: string
+  author: string
+  publishedTime: string | Date
+  modifiedTime?: string | Date
+  categories: Array<{ name: string; slug: string }>
+  tags: Array<{ name: string; slug: string }>
+  localizedSlugs: Record<string, string>
+  lang: Locale
+  siteBaseUrl: string
+  readingTime: number
+}
+
+const {
+  title,
+  image,
+  author,
+  publishedTime,
+  categories,
+  tags,
+  localizedSlugs,
+  lang,
+  readingTime,
+  siteBaseUrl
+} = Astro.props
+
+const formattedDate = new Date(publishedTime).toLocaleDateString(lang, {
+  dateStyle: 'long'
+})
+
+const availableInTitle = await t(lang, 'articles', 'article_header_available_versions_title')
+---
+
+<header class="w-full mb-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+    <div class="flex flex-col gap-6 order-2 md:order-1">
+      <div class="flex items-center gap-3 text-sm text-app-text-secondary">
+        <span class="text-app-text font-medium">
+          {author}
+        </span>
+        <span>•</span>
+        <time datetime={new Date(publishedTime).toISOString()}>
+          {formattedDate}
+        </time>
+      </div>
+
+      <h1 class="heading-1">
+        {title}
+      </h1>
+
+      <div class="flex flex-wrap gap-2 items-center">
+        {categories.map(category => (
+          <a
+            href={buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH, category.slug ]), siteBaseUrl)}
+            class="px-3 py-1 text-sm font-medium text-white bg-app-brand-primary rounded-sm hover:bg-app-hover transition-colors"
+          >
+            {category.name}
+          </a>
+        ))}
+
+        {categories.length > 0 && tags.length > 0 && (
+          <span class="text-gray-300 dark:text-gray-700">|</span>
+        )}
+
+        {tags.map(tag => (
+          <a
+            href={buildCanonical(buildRelativeUrl(lang, [ TAGS_PATH, tag.slug ]), siteBaseUrl)}
+            class="px-3 py-1 text-sm font-medium text-white bg-app-brand-secondary rounded-sm hover:bg-app-hover transition-colors"
+          >
+            #{tag.name}
+          </a>
+        ))}
+      </div>
+
+      {Object.keys(localizedSlugs).length > 1 && (
+        <div>
+          <p class="text-xs text-app-text-secondary uppercase tracking-wider mb-2 font-semibold">
+            {availableInTitle}
+          </p>
+          <nav class="flex flex-row flex-wrap gap-2 justify-start">
+            {i18nConfig.locales.map((locale) => {
+              const isCurrent = locale === lang
+              const slug = localizedSlugs[locale]
+
+              if (!slug) {
+                return null
+              }
+
+              const href = buildRelativeUrl(locale, [ 'articles', slug ])
+
+              return (
+                <a
+                  href={href}
+                  class:list={[
+                    'text-sm px-2.5 py-1 rounded border text-center transition-all',
+                    isCurrent
+                      ? 'border-app-brand-primary bg-app-brand-primary text-app-text font-bold pointer-events-none'
+                      : 'border-app-border text-app-text-secondary hover:bg-app-hover'
+                  ]}
+                  aria-current={isCurrent ? 'page' : undefined}
+                >
+                  {locale.toUpperCase()}
+                </a>
+              )
+            })}
+          </nav>
+        </div>
+      )}
+
+    </div>
+
+    <div class="order-1 md:order-2">
+      {image ? (
+        <div class="relative w-full aspect-video md:aspect-square lg:aspect-[4/3] overflow-hidden rounded-xl shadow-lg">
+          <img
+            src={image}
+            alt={title}
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
+        </div>
+      ) : (
+        <div class="w-full aspect-video md:aspect-[4/3] rounded-xl bg-app-surface flex items-center justify-center text-app-text-secondary">
+          <span class="text-6xl">📝</span>
+        </div>
+      )}
+    </div>
+
+  </div>
+</header>

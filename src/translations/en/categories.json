@@ -1,11 +1,15 @@
 {
-  "category_card_aria_label_title": "See category {title} articles",
+  "categories_breadcrumb_title": "Categories",
+  "categories_page_description": "Find articles organized by topic to easily access the content that interests you most",
+  "categories_page_h1_title": "Categories",
+  "categories_page_p_description": "Explore all topics. Find articles, tutorials, and guides organized by their main subject",
+  "categories_page_title": "Browse all categories",
+  "category_card_aria_label_title": "See articles categorized by {title}",
   "category_card_articles_count": "{articlesNumber} articles",
   "category_card_gallery_section_title": "Categories",
   "category_card_image_alt_title": "Featured image of the category: {title}",
-  "category_page_description": "Explore all articles related to {name} on our blog",
-  "category_page_title": "Articles categorized by {category}",
-  "categories_page_description": "Find articles organized by topic to easily access the content that interests you most",
-  "categories_page_h1_title": "Categories",
-  "categories_page_title": "Browse all categories"
+  "category_header_children_categories_title": "Children categories",
+  "category_header_parent_category_title": "Parent category",
+  "category_page_description": "Explore all articles related to {category} on our blog",
+  "category_page_title": "Articles categorized by {category}"
 }

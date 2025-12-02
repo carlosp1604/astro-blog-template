@@ -14,8 +14,8 @@ export default tseslint.config(
       '**/tests/**',
       'coverage',
       '.astro/**',
-      'node_modules/**',
-    ],
+      'node_modules/**'
+    ]
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -24,7 +24,7 @@ export default tseslint.config(
     files: [ '**/*.astro' ],
     plugins: {
       'unused-imports': unusedImports,
-      '@stylistic': stylistic,
+      '@stylistic': stylistic
     },
     rules: {
       'no-unused-vars': 'off',
@@ -37,24 +37,27 @@ export default tseslint.config(
       '@stylistic/object-curly-spacing': [ 'error', 'always' ],
       '@stylistic/array-bracket-spacing': [ 'error' ,'always' ],
       '@stylistic/curly-newline': [ 'error', 'always' ],
-      '@stylistic/type-annotation-spacing': 'error',
-    },
+      '@stylistic/type-annotation-spacing': 'error'
+    }
   },
   {
     files: [ '**/*.{js,jsx,ts,tsx,mjs,cjs}' ],
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: globals.browser,
+      globals: globals.browser
     },
     plugins: {
       import: importPlugin,
       'unused-imports': unusedImports,
-      '@stylistic': stylistic,
+      '@stylistic': stylistic
     },
     rules: {
+      '@stylistic/comma-dangle': [ 'error', 'never' ],
+      '@stylistic/padded-blocks': [ 'error', 'never' ],
+      '@stylistic/function-paren-newline': [ 'error', 'multiline-arguments' ],
       '@stylistic/object-curly-spacing': [ 'error', 'always' ],
       '@stylistic/array-bracket-spacing': [ 'error' ,'always' ],
-      '@stylistic/curly-newline': [ 'error', 'always' ],
+      '@stylistic/curly-newline': [ 'error', { minElements: 1 } ],
       '@stylistic/type-annotation-spacing': 'error',
       '@stylistic/quotes': [ 'error', 'single' ],
       '@stylistic/semi': [ 'error', 'never' ],
@@ -66,23 +69,23 @@ export default tseslint.config(
         'error',
         {
           selector: 'typeLike',
-          format: [ 'PascalCase' ],
-        },
+          format: [ 'PascalCase' ]
+        }
       ],
       '@stylistic/jsx-curly-spacing': [
         'error',
         {
           when: 'always',
-          children: true,
-        },
+          children: true
+        }
       ],
       '@stylistic/member-delimiter-style': [
         'error',
         {
           multiline: {
-            delimiter: 'none',
-          },
-        },
+            delimiter: 'none'
+          }
+        }
       ],
       'unused-imports/no-unused-vars': [
         'warn',
@@ -90,23 +93,8 @@ export default tseslint.config(
           vars: 'all',
           varsIgnorePattern: '^_',
           args: 'after-used',
-          argsIgnorePattern: '^_',
-        },
-      ],
-      'import/order': [
-        'warn',
-        {
-          alphabetize: { caseInsensitive: true, order: 'asc' },
-          groups: [ 'builtin',
-            'external',
-            'sibling',
-            'parent' ],
-          'newlines-between': 'never',
-          pathGroupsExcludedImportTypes: [ 'builtin' ],
-          pathGroups: [
-            { group: 'external', pattern: '@/**', position: 'after' },
-          ],
-        },
+          argsIgnorePattern: '^_'
+        }
       ],
       'padding-line-between-statements': [
         'error',
@@ -114,24 +102,24 @@ export default tseslint.config(
         { blankLine: 'never', prev: 'import', next: 'import' },
         { blankLine: 'always', prev: [ 'let', 'const', 'var' ], next: '*' },
         { blankLine: 'any', prev: [ 'let', 'const', 'var' ], next: [ 'let', 'const', 'var' ] },
-        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: '*', next: 'return' }
       ],
       quotes: [ 'error', 'single' ],
       indent: [ 'error', 2 ],
-      'max-len': [ 'error', { code: 136 } ],
-    },
+      'max-len': [ 'error', { code: 136 } ]
+    }
   },
   {
     files: [ '**/*.{ts,tsx}' ],
     rules: {
       indent: 'off',
-      '@stylistic/indent': [ 'error', 2 ],
-    },
+      '@stylistic/indent': [ 'error', 2 ]
+    }
   },
   {
     files: [ '**/*.{ts,tsx,js,jsx,astro}' ],
     plugins: {
-      import: importPlugin,
+      import: importPlugin
     },
     rules: {
       'import/no-relative-parent-imports': 'error',
@@ -139,8 +127,8 @@ export default tseslint.config(
         'error',
         {
           patterns: [ '../**' ]
-        },
-      ],
-    },
+        }
+      ]
+    }
   }
 )

@@ -1,4 +1,6 @@
 {
   "home_page_description": "This is a simple fully customizable blog template built with Astro.js. You can start to add articles and design your blog. TailwindCSS, eslint and i18n already configured. SEO optimized",
+  "home_page_h1_title":  "Blog Template",
+  "home_page_p_description_title": "Project built to serve as a plant for the creation of personalized blogs.\nCreated with Astro.js and follows all good programming practices",
   "home_page_title": "Blog Template built with Astro.js"
 }

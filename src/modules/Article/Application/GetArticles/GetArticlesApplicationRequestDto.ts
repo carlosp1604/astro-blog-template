@@ -1,8 +1,14 @@
+interface GetArticlesFilterApplicationDto {
+  title: string
+  categoryId: string
+  tagId: string
+}
+
 export interface GetArticlesApplicationRequestDto {
-  pageNumber: number
-  pageSize: number
-  sortOption: string
-  sortOrder: string
-  locale: string
-  categoryId: string | undefined
+  readonly pageNumber: number
+  readonly pageSize: number
+  readonly sortOption: string
+  readonly sortOrder: string
+  readonly locale: string
+  readonly filters: Partial<GetArticlesFilterApplicationDto>
 }

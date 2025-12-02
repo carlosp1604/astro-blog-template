@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { i18nConfig, type Locale, type Namespace } from '@/config/i18n.config.ts'
 
 const modules = import.meta.glob('./*/**/*.json', { eager: false })
@@ -39,8 +40,7 @@ function resolvePath(obj: Record<string, unknown>, path: string[]) {
 
 function interpolate(str: string, params: Params): string {
   return str.replace(/\{(\w+)\}/g, (_, match) =>
-    params[match] !== undefined ? String(params[match]) : `{${match}}`
-  )
+    params[match] !== undefined ? String(params[match]) : `{${match}}`)
 }
 
 export async function t(
@@ -95,4 +95,18 @@ export function getLanguageHref(
 
 export function getLocale(pathname: string): Locale {
   return pathname.split('/')[1] as typeof i18nConfig.locales[number]
+}
+
+const [ firstLocale, ...otherLocales ] = i18nConfig.locales
+
+export const LocaleSchema = z.enum([ firstLocale, ...otherLocales ])
+
+export function validateLocale(lang: string | undefined) {
+  const result = LocaleSchema.safeParse(lang)
+
+  if (!result.success) {
+    return null
+  }
+
+  return result.data
 }

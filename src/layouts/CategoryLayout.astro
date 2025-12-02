@@ -1,43 +1,110 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import Seo, { type Hreflang } from '@/components/Seo.astro'
-import { getLocale, t } from '@/translations'
+import Seo, { type BreadcrumbItem, type CollectionPage, type PageImage } from '@/components/Seo.astro'
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { QUERY_PARAM } from '@/modules/Shared/Infrastructure/Frontend/QueryParam'
+import { type Locale, i18nConfig } from '@/config/i18n.config'
+import { ARTICLES_PATH, CATEGORIES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import type { CategoryPagePaginationData } from '@/modules/Category/Infrastructure/Frontend/CategoryPageLoader'
+import {
+  buildCanonical,
+  buildHreflangs,
+  buildRelativeUrl,
+  toAbsoluteUrl
+} from '@/modules/Shared/Infrastructure/Frontend/Url'
 
 interface Props {
-    name: string
-    hreflangs: Array<Hreflang>
-    canonical: string
-    image?: string
+  name: string
+  slug: string
+  localizedSlugs: Record<string, string>
+  image?: string
+  imageAltTitle?: string
+  pagination: CategoryPagePaginationData
+  lang: Locale
 }
 
 const {
   name,
-  canonical,
-  hreflangs,
-  image = ''
+  slug,
+  localizedSlugs,
+  image = undefined,
+  imageAltTitle = undefined,
+  pagination,
+  lang
 } = Astro.props
 
-const siteName = import.meta.env.PUBLIC_SITE_NAME as string
+const siteName = env.PUBLIC_SITE_NAME
+const siteBaseUrl = env.PUBLIC_SITE_BASE_URL
 
-const lang = getLocale(Astro.url.pathname)
+const pageSearchParam = pagination.page > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${pagination.page}`) : undefined
 
-const title = await t(lang, 'categories', 'category_page_title',  { name })
-const description = await t(lang, 'categories', 'category_page_description',  { name })
+const canonical = buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH, slug ], pageSearchParam), siteBaseUrl)
+const hreflangs = buildHreflangs(
+  i18nConfig.locales,
+  siteBaseUrl,
+  (locale) => (buildRelativeUrl(locale, [ CATEGORIES_PATH, localizedSlugs[locale] ], pageSearchParam)))
+
+const title = await t(lang, 'categories', 'category_page_title',  { category: name })
+const description = await t(lang, 'categories', 'category_page_description',  { category: name })
+const categoriesBreadCrumbTranslation = await t(lang, 'categories', 'categories_breadcrumb_title')
+
+const breadCrumbs: Array<BreadcrumbItem> = [
+  { name: siteName, url: buildCanonical(buildRelativeUrl(lang), siteBaseUrl), position: 1 },
+  { name: categoriesBreadCrumbTranslation, url: buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH ]), siteBaseUrl), position: 2 },
+  { name, url: buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH, slug ]), siteBaseUrl), position: 3 }
+]
+
+let prevPageSearchParam = (pagination.page - 1) > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page - 1)}`) : undefined
+let nextPageSearchParam = new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page + 1)}`)
+
+const emptyCollection = pagination.articlesSlugWithTitle.length === 0
+
+let collection: CollectionPage | undefined
+
+if (!emptyCollection) {
+  collection = {
+    prev: pagination.hasPrev ? buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH, slug ], prevPageSearchParam), siteBaseUrl) : undefined,
+    next: pagination.hasNext ? buildCanonical(buildRelativeUrl(lang, [ CATEGORIES_PATH, slug ], nextPageSearchParam), siteBaseUrl) : undefined,
+    totalItems: pagination.totalItems,
+    offset: pagination.offset,
+    items: pagination.articlesSlugWithTitle.map((articleSlugWithTitle, index) => ({
+      url: buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH, articleSlugWithTitle.slug ]), siteBaseUrl),
+      position: pagination.offset + index + 1,
+      name: articleSlugWithTitle.title,
+    }))
+  }
+}
+
+const translatedPaths = i18nConfig.locales.map((locale) => ({
+  href: buildRelativeUrl(locale, [ CATEGORIES_PATH, localizedSlugs[locale] ]),
+  locale
+}))
+
+let pageImage: PageImage | undefined
+
+if (image && imageAltTitle) {
+  pageImage = {
+    path: toAbsoluteUrl(image, siteBaseUrl),
+    altTitle: imageAltTitle
+  }
+}
 ---
 
-<BaseLayout>
+<BaseLayout lang={lang} translatedPaths={translatedPaths}>
   <Seo
     title={title}
     description={description}
     canonical={canonical}
     lang={lang}
     hreflangs={hreflangs}
-    ogImage={image}
-    type={'article'}
+    image={pageImage}
+    type={'website'}
     slot={'head'}
-    siteName={siteName}
+    breadcrumbs={breadCrumbs}
+    collection={collection}
+    noIndex={emptyCollection}
   />
-
   <main class="flex-1">
     <slot />
   </main>

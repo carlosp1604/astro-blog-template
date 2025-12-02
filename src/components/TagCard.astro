@@ -1,0 +1,55 @@
+---
+import { t } from '@/translations'
+import type { Locale } from '@/config/i18n.config'
+
+interface Props {
+  lang: Locale
+  title: string
+  articleCount: number
+  href?: string
+}
+
+const {
+  lang,
+  title,
+  articleCount,
+  href
+} = Astro.props
+
+const tagCardAriaLabelTranslation = await t(lang, 'tags', 'tag_card_aria_label_title', { title })
+const tagCardArticlesCountTranslation = await t(lang, 'tags', 'tag_card_articles_count', { articlesNumber: articleCount })
+const base = 'block h-full group overflow-hidden rounded-md bg-app-surface hover:bg-app-hover'
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={base}
+      aria-label={tagCardAriaLabelTranslation}
+    >
+      <div class="p-4 space-y-1">
+        <h3 class="heading-3 font-bold">
+          {title}
+        </h3>
+        <p class="text-meta">
+          {tagCardArticlesCountTranslation}
+        </p>
+      </div>
+    </a>
+  ) : (
+    <div
+      class={base}
+      aria-label={tagCardAriaLabelTranslation}
+    >
+      <div class="p-4 space-y-1">
+        <h3 class="heading-3 font-bold">
+          {title}
+        </h3>
+        <p class="text-meta">
+          {tagCardArticlesCountTranslation}
+        </p>
+      </div>
+    </div>
+  )
+}

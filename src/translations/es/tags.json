@@ -1,0 +1,13 @@
+{
+  "tags_breadcrumb_title": "Etiquetas",
+  "tags_page_description": "Encuentra artículos organizados por temas para acceder fácilmente al contenido que más te interesa",
+  "tags_page_h1_title": "Etiquetas",
+  "tags_page_p_description": "Índice de etiquetas. Filtra nuestro contenido por tecnologías concretas, conceptos o palabras clave específicas",
+  "tags_page_title": "Explora todas las etiquetas",
+  "tag_card_aria_label_title": "Ver artículos de la etiqueta: {title}",
+  "tag_card_articles_count": "{articlesNumber} artículos",
+  "tag_card_gallery_section_title": "Etiquetas",
+  "tag_page_description": "Explora todos los artículos relacionados con {tag} en nuestro blog",
+  "tag_page_title": "Artículos etiquetados por {tag}",
+  "tag_page_p_description": "Explora todos los artículos, tutoriales y recursos etiquetados con {name}"
+}

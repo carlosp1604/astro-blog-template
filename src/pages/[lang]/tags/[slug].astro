@@ -1,0 +1,36 @@
+---
+import TagLayout from '@/layouts/TagLayout.astro'
+import TagHeader from '@/components/TagHeader.astro'
+import ArticleCardGallery from '@/components/ArticleCardGallery.astro'
+import { loadTagPage } from '@/modules/Tag/Infrastructure/Frontend/TagPageLoader'
+
+const loadPageResult = await loadTagPage(Astro)
+
+if (loadPageResult instanceof Response) {
+  return loadPageResult
+}
+
+const { tag, slugs, pagination, lang, articlesPage } = loadPageResult
+
+export const prerender = false
+---
+
+<TagLayout
+  name={tag.name}
+  slug={tag.slug}
+  localizedSlugs={slugs}
+  pagination={pagination}
+  lang={lang}
+>
+  <div class="page-container flex flex-col gap-6 py-5 md:py-10">
+    <TagHeader tag={tag} lang={lang} />
+    <ArticleCardGallery
+      articles={articlesPage.articles}
+      lang={lang}
+      page={articlesPage.page}
+      hasNext={articlesPage.hasNext}
+      hasPrev={articlesPage.hasPrev}
+      sortBy={articlesPage.criteria.sortBy}
+    />
+  </div>
+</TagLayout>

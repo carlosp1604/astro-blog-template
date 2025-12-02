@@ -1,0 +1,96 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Seo, { type BreadcrumbItem, type CollectionPage } from '@/components/Seo.astro'
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { QUERY_PARAM } from '@/modules/Shared/Infrastructure/Frontend/QueryParam'
+import { type Locale, i18nConfig } from '@/config/i18n.config'
+import { ARTICLES_PATH, TAGS_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import type { TagPagePaginationData } from '@/modules/Tag/Infrastructure/Frontend/TagPageLoader'
+import {
+  buildCanonical,
+  buildHreflangs,
+  buildRelativeUrl
+} from '@/modules/Shared/Infrastructure/Frontend/Url'
+
+interface Props {
+  name: string
+  slug: string
+  localizedSlugs: Record<string, string>
+  pagination: TagPagePaginationData
+  lang: Locale
+}
+
+const {
+  name,
+  slug,
+  localizedSlugs,
+  pagination,
+  lang
+} = Astro.props
+
+const siteName = env.PUBLIC_SITE_NAME
+const siteBaseUrl = env.PUBLIC_SITE_BASE_URL
+
+const pageSearchParam = pagination.page > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${pagination.page}`) : undefined
+
+const canonical = buildCanonical(buildRelativeUrl(lang, [ TAGS_PATH, slug ], pageSearchParam), siteBaseUrl)
+const hreflangs = buildHreflangs(
+  i18nConfig.locales,
+  siteBaseUrl,
+  (locale) => (buildRelativeUrl(locale, [ TAGS_PATH, localizedSlugs[locale] ], pageSearchParam)))
+
+const title = await t(lang, 'tags', 'tag_page_title',  { tag: name })
+const description = await t(lang, 'tags', 'tag_page_description',  { tag: name })
+const tagsBreadCrumbTranslation = await t(lang, 'tags', 'tag_breadcrumb_title')
+
+const breadCrumbs: Array<BreadcrumbItem> = [
+  { name: siteName, url: buildCanonical(buildRelativeUrl(lang), siteBaseUrl), position: 1 },
+  { name: tagsBreadCrumbTranslation, url: buildCanonical(buildRelativeUrl(lang, [ TAGS_PATH ]), siteBaseUrl), position: 2 },
+  { name, url: buildCanonical(buildRelativeUrl(lang, [ TAGS_PATH, slug ]), siteBaseUrl), position: 3 }
+]
+
+let prevPageSearchParam = (pagination.page - 1) > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page - 1)}`) : undefined
+let nextPageSearchParam = new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page + 1)}`)
+
+const emptyCollection = pagination.articlesSlugWithTitle.length === 0
+
+let collection: CollectionPage | undefined
+
+if (!emptyCollection) {
+  collection = {
+    prev: pagination.hasPrev ? buildCanonical(buildRelativeUrl(lang, [ TAGS_PATH, slug ], prevPageSearchParam), siteBaseUrl) : undefined,
+    next: pagination.hasNext ? buildCanonical(buildRelativeUrl(lang, [ TAGS_PATH, slug ], nextPageSearchParam), siteBaseUrl) : undefined,
+    totalItems: pagination.totalItems,
+    offset: pagination.offset,
+    items: pagination.articlesSlugWithTitle.map((articleSlugWithTitle, index) => ({
+      url: buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH, articleSlugWithTitle.slug ]), siteBaseUrl),
+      position: pagination.offset + index + 1,
+      name: articleSlugWithTitle.title,
+    }))
+  }
+}
+
+const translatedPaths = i18nConfig.locales.map((locale) => ({
+  href: buildRelativeUrl(locale, [ TAGS_PATH, localizedSlugs[locale] ]),
+  locale
+}))
+---
+
+<BaseLayout lang={lang} translatedPaths={translatedPaths}>
+  <Seo
+    title={title}
+    description={description}
+    canonical={canonical}
+    lang={lang}
+    hreflangs={hreflangs}
+    type={'website'}
+    slot={'head'}
+    breadcrumbs={breadCrumbs}
+    collection={collection}
+    noIndex={emptyCollection}
+  />
+  <main class="flex-1">
+    <slot />
+  </main>
+</BaseLayout>

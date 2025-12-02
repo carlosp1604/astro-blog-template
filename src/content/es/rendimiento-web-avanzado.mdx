@@ -1,0 +1,17 @@
+Más allá de minificar CSS y optimizar imágenes, existen métricas críticas que Google utiliza para rankear tu sitio: los **Core Web Vitals**.
+
+## Métricas Principales
+
+* **LCP (Largest Contentful Paint):** Cuánto tarda en cargar el elemento más grande visible.
+* **CLS (Cumulative Layout Shift):** Cuánto se mueve la página mientras carga (estabilidad visual).
+* **FID (First Input Delay):** Cuánto tarda la página en reaccionar a la primera interacción del usuario.
+
+## Técnicas de Optimización
+
+### Lazy Loading
+
+Carga las imágenes solo cuando entran en el viewport. En HTML moderno es tan fácil como:
+
+```html
+<img src="foto.jpg" loading="lazy" alt="Descripción" />
+```

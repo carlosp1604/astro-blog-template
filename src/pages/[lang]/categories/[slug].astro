@@ -1,0 +1,41 @@
+---
+import CategoryHeader from '@/components/CategoryHeader.astro'
+import CategoryLayout from '@/layouts/CategoryLayout.astro'
+import ArticleCardGallery from '@/components/ArticleCardGallery.astro'
+import { loadCategoryPage } from '@/modules/Category/Infrastructure/Frontend/CategoryPageLoader'
+
+const loadPageResult = await loadCategoryPage(Astro)
+
+if (loadPageResult instanceof Response) {
+  return loadPageResult
+}
+
+const { category, slugs, pagination, lang, articlesPage } = loadPageResult
+
+export const prerender = false
+---
+
+<CategoryLayout
+  name={category.name}
+  slug={category.slug}
+  localizedSlugs={slugs}
+  image={category.imageUrl ?? undefined}
+  imageAltTitle={category.imageAltTitle ?? undefined}
+  pagination={pagination}
+  lang={lang}
+>
+  <div class="page-container flex flex-col gap-6 py-5 md:py-10">
+    <CategoryHeader
+      lang={lang}
+      category={category}
+    />
+    <ArticleCardGallery
+      articles={articlesPage.articles}
+      lang={lang}
+      page={articlesPage.page}
+      hasNext={articlesPage.hasNext}
+      hasPrev={articlesPage.hasPrev}
+      sortBy={articlesPage.criteria.sortBy}
+    />
+  </div>
+</CategoryLayout>

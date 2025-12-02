@@ -1,12 +1,22 @@
 import { DomainException } from '@/modules/Exceptions/Domain/DomainException.ts'
 
 export class ArticleDomainException extends DomainException {
-  public static bodyNotLoadedId = 'article_domain_body_not_loaded'
+  private _brand!: void
 
-  public static bodyNotLoaded (id: string): ArticleDomainException {
-    return new ArticleDomainException(
-      `Body was not loaded for article with ID ${id}`,
-      this.bodyNotLoadedId
-    )
+  public static invalidIdId = 'article_invalid_id'
+  public static invalidIdSlugId = 'article_invalid_slug'
+
+  constructor(message: string, id: string) {
+    super(message, id, ArticleDomainException.name)
+
+    Object.setPrototypeOf(this, ArticleDomainException.prototype)
+  }
+
+  public static invalidId (): ArticleDomainException {
+    return new ArticleDomainException('Invalid Article ID', this.invalidIdId)
+  }
+
+  public static invalidSlug (): ArticleDomainException {
+    return new ArticleDomainException('Invalid Article slug', this.invalidIdSlugId)
   }
 }

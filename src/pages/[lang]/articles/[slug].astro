@@ -1,0 +1,91 @@
+---
+import container from '~/container'
+import ArticleLayout from '@/layouts/ArticleLayout.astro'
+import { env } from '~/env.loader'
+import { i18nConfig } from '@/config/i18n.config'
+import { GetArticles } from '@/modules/Article/Application/GetArticles/GetArticles'
+import { loadArticlePage } from '@/modules/Article/Infrastructure/Frontend/ArticlePageLoader'
+import {
+  DEFAULT_ARTICLE_ORDER,
+  DEFAULT_ARTICLE_SORT
+} from '@/modules/Shared/Infrastructure/Frontend/ArticleSortOptions'
+
+export async function getStaticPaths() {
+  const getArticlesUseCase = container.resolve<GetArticles>('getArticles')
+  const paths = []
+
+  const BATCH_SIZE = env.PAGINATION_MAX_PAGE_SIZE
+
+  for (const locale of i18nConfig.locales) {
+    let page = 1
+    let hasNext = true
+
+    while (hasNext) {
+      const getArticlesResult = await getArticlesUseCase.get({
+        locale: locale,
+        pageNumber: page,
+        pageSize: BATCH_SIZE,
+        sortOption: DEFAULT_ARTICLE_SORT,
+        sortOrder: DEFAULT_ARTICLE_ORDER,
+        filters: {}
+      })
+
+      if (!getArticlesResult.success) {
+        console.error(`[Article Pages Build Error] Failed to generate Article Pages for [${page}] - [${locale}]`)
+        console.error(getArticlesResult.error)
+
+        throw new Error(`Article Pages Generation Failed for [${page}] - [${locale}]`)
+      }
+
+      const articlesPage = getArticlesResult.value
+
+      const localePaths = articlesPage.articles.map((article) => ({
+        params: {
+          lang: locale,
+          slug: article.slug
+        },
+      }))
+      paths.push(...localePaths)
+
+      hasNext = articlesPage.hasNext
+      page++
+    }
+  }
+
+  return paths
+}
+
+const loadPageResult = await loadArticlePage(Astro)
+
+if (loadPageResult instanceof Response) {
+  return loadPageResult
+}
+
+const { article, slugs, lang } = loadPageResult
+
+const Content = article.content || null
+
+if (!Content) {
+  throw new Error(`[Article Pages Build Error] CRITICAL: MDX Content missing for article "${article.slug}". Check if the file exists in src/content`)
+}
+
+export const prerender = true
+---
+
+<ArticleLayout
+  title={article.title}
+  description={article.description}
+  slug={article.slug}
+  localizedSlugs={slugs}
+  image={article.imageUrl}
+  imageAltTitle={article.imageAltTitle}
+  publishedTime={article.publishedAt}
+  modifiedTime={article.updatedAt}
+  author={article.authorName}
+  tags={article.tags.map((tag) => ({ name: tag.name, slug: tag.slug }))}
+  categories={article.categories.map((category) => ({ name: category.name, slug: category.slug }))}
+  lang={lang}
+  readingTime={article.readingTime}
+>
+  <Content />
+</ArticleLayout>

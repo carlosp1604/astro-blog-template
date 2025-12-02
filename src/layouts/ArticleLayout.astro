@@ -1,57 +1,136 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import Seo, { type Hreflang } from '@/components/Seo.astro'
-import { getLocale } from '@/translations'
+import ArticleHeader from '@/components/ArticleHeader.astro'
+import Seo, { type BreadcrumbItem } from '@/components/Seo.astro'
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { ARTICLES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { type Locale, i18nConfig } from '@/config/i18n.config'
+import type { ArticleData, PageImage } from '@/components/Seo.astro'
+import {
+  buildCanonical,
+  buildHreflangs,
+  buildRelativeUrl,
+  toAbsoluteUrl
+} from '@/modules/Shared/Infrastructure/Frontend/Url'
+
+interface ArticleCategoryProp {
+  name: string
+  slug: string
+}
+
+interface ArticleTagProp {
+  name: string
+  slug: string
+}
 
 interface Props {
-    title: string
-    description: string
-    hreflangs: Array<Hreflang>
-    canonical: string
-    publishedTime: string
-    modifiedTime: string
-    tags: Array<string>
-    author: string
-    image?: string
+  title: string
+  description: string
+  slug: string
+  localizedSlugs: Record<string, string>
+  publishedTime: string
+  modifiedTime: string
+  author: string
+  tags: Array<ArticleTagProp>
+  categories: Array<ArticleCategoryProp>
+  image?: string
+  imageAltTitle?: string
+  readingTime: number
+  lang: Locale
 }
 
 const {
   title,
   description,
-  canonical,
-  hreflangs,
+  slug,
+  localizedSlugs,
   publishedTime,
   modifiedTime,
   author,
   tags,
-  image = ''
+  categories,
+  image = undefined,
+  imageAltTitle = undefined,
+  readingTime,
+  lang
 } = Astro.props
 
-const siteName = import.meta.env.PUBLIC_SITE_NAME as string
+const siteName = env.PUBLIC_SITE_NAME
+const siteBaseUrl = env.PUBLIC_SITE_BASE_URL
 
-const lang = getLocale(Astro.url.pathname)
+const canonical = buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH, slug ]), siteBaseUrl)
+const hreflangs = buildHreflangs(
+  i18nConfig.locales,
+  siteBaseUrl,
+  (locale) => buildRelativeUrl(locale, [ ARTICLES_PATH, localizedSlugs[locale] ])
+)
+
+const articlesBreadCrumbTranslation = await t(lang, 'articles', 'articles_breadcrumb_title')
+
+const breadCrumbs: Array<BreadcrumbItem> = [
+  { name: siteName, url: buildCanonical(buildRelativeUrl(lang), siteBaseUrl), position: 1 },
+  { name: articlesBreadCrumbTranslation, url: buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH ]), siteBaseUrl), position: 2 },
+  { name: title, url: canonical, position: 3 },
+]
+
+const articleData: ArticleData = {
+  // TODO: Define an author URL
+  author: { name: author },
+  lang,
+  tags: tags.map((tag) => tag.name),
+  section: categories.map((category) => category.name),
+  isAccessibleForFree: true,
+  publishedTime,
+  modifiedTime
+}
+
+const translatedPaths = i18nConfig.locales.map((locale) => ({
+  href: buildRelativeUrl(locale, [ ARTICLES_PATH, localizedSlugs[locale] ]),
+  locale
+}))
+
+let pageImage: PageImage | undefined
+
+if (image && imageAltTitle) {
+  pageImage = {
+    path: toAbsoluteUrl(image, siteBaseUrl),
+    altTitle: imageAltTitle
+  }
+}
 ---
 
-<BaseLayout>
+<BaseLayout translatedPaths={translatedPaths} lang={lang}>
   <Seo
     title={title}
     description={description}
     canonical={canonical}
     lang={lang}
     hreflangs={hreflangs}
-    ogImage={image}
+    image={pageImage}
     type={'article'}
     slot={'head'}
-    siteName={siteName}
-    publishedTime={publishedTime}
-    modifiedTime={modifiedTime}
-    author={author}
-    tags={tags}
+    breadcrumbs={breadCrumbs}
+    articleData={articleData}
   />
 
-  <article class="flex-1">
-    <main>
-      <slot />
+  <article class="flex-1 w-full transition-colors duration-300">
+    <main class="page-container flex flex-col gap-6 py-5 md:py-10">
+      <ArticleHeader
+        title={title}
+        image={image}
+        author={author}
+        publishedTime={publishedTime}
+        categories={categories}
+        tags={tags}
+        lang={lang}
+        localizedSlugs={localizedSlugs}
+        siteBaseUrl={siteBaseUrl}
+        readingTime={readingTime}
+      />
+      <div class="prose prose-app prose-sm md:prose-base max-w-none">
+        <slot />
+      </div>
     </main>
   </article>
 </BaseLayout>

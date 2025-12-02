@@ -3,7 +3,7 @@ export interface CategoryApplicationDto {
   slug: string
   name: string
   description: string
-  imageUrl: string
-  imageAltTitle: string
+  imageUrl: string | null
+  imageAltTitle: string | null
   articlesCount: number
 }

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+    "translations": {
+      "es": { "name": "JavaScript" },
+      "en": { "name": "JavaScript" }
+    },
+    "slugs": {
+      "es": "javascript",
+      "en": "javascript"
+    }
+  },
+  {
+    "id": "5a42336b-d3f2-4247-92f0-895662771903",
+    "translations": {
+      "es": { "name": "TypeScript" },
+      "en": { "name": "TypeScript" }
+    },
+    "slugs": {
+      "es": "typescript",
+      "en": "typescript"
+    }
+  },
+  {
+    "id": "c1949562-9261-4d73-8256-32637123717c",
+    "translations": {
+      "es": { "name": "React" },
+      "en": { "name": "React" }
+    },
+    "slugs": {
+      "es": "react",
+      "en": "react"
+    }
+  },
+  {
+    "id": "87768912-7e6a-44d2-9738-328e85528952",
+    "translations": {
+      "es": { "name": "CSS" },
+      "en": { "name": "CSS" }
+    },
+    "slugs": {
+      "es": "css",
+      "en": "css"
+    }
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "translations": {
+      "es": { "name": "HTML" },
+      "en": { "name": "HTML" }
+    },
+    "slugs": {
+      "es": "html",
+      "en": "html"
+    }
+  },
+  {
+    "id": "33295053-3494-4260-9926-c79252657271",
+    "translations": {
+      "es": { "name": "Backend" },
+      "en": { "name": "Backend" }
+    },
+    "slugs": {
+      "es": "backend",
+      "en": "backend"
+    }
+  },
+  {
+    "id": "90d33815-15fd-47f3-9132-3f5366620909",
+    "translations": {
+      "es": { "name": "Frontend" },
+      "en": { "name": "Frontend" }
+    },
+    "slugs": {
+      "es": "frontend",
+      "en": "frontend"
+    }
+  },
+  {
+    "id": "b1c2d3e4-f5a6-47b8-9c0d-1e2f3a4b5c6d",
+    "translations": {
+      "es": { "name": "DevOps" },
+      "en": { "name": "DevOps" }
+    },
+    "slugs": {
+      "es": "devops",
+      "en": "devops"
+    }
+  },
+  {
+    "id": "bf5d4c1f-6875-4fbd-bcfa-98089c749f96",
+    "translations": {
+      "es": { "name": "Tutorial" },
+      "en": { "name": "Tutorial" }
+    },
+    "slugs": {
+      "es": "tutorial",
+      "en": "tutorial"
+    }
+  },
+  {
+    "id": "46ead73c-4998-4eff-8d01-e2c6d777a862",
+    "translations": {
+      "es": { "name": "Buenas Prácticas" },
+      "en": { "name": "Best Practices" }
+    },
+    "slugs": {
+      "es": "buenas-practicas",
+      "en": "best-practices"
+    }
+  }
+]

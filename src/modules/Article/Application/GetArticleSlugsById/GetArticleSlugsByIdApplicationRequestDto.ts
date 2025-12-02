@@ -1,3 +1,3 @@
 export interface GetArticleSlugsByIdApplicationRequestDto {
-  id: string
+  readonly id: string
 }

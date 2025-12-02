@@ -1,8 +1,18 @@
 {
   "footer_copyright_title": "{year} © {siteName}. Todos los derechos reservados",
-  "footer_home_link_title": "Inicio",
   "footer_navigation_section_aria_label_title": "Navegación del pie de página",
   "language_switcher_aria_label_title": "Selector de lenguaje",
-  "nav_bar_aria_label_title": "Navegación principal",
-  "nav_bar_home_link_title": "Inicio"
+  "nav_bar_desktop_aria_label_title": "Navegación escritorio principal",
+  "nav_bar_mobile_aria_label_title": "Navegación movil principal",
+  "nav_item_articles_link_title": "Artículos",
+  "nav_item_categories_link_title": "Categorías",
+  "nav_item_home_link_title": "Inicio",
+  "nav_item_tags_link_title": "Etiquetas",
+  "rss_page_description": "Las últimas noticias y artículos de {siteName}",
+  "rss_page_title": "{siteName} - Blog {lang}",
+  "seo_default_image_alt_title": "Imagen de portada por defecto de {siteName}",
+  "theme_switcher_aria_label": "Selector de tema",
+  "theme_switcher_dark_theme_title": "Oscuro",
+  "theme_switcher_light_theme_title": "Claro",
+  "theme_switcher_system_theme_title": "Sistema"
 }

@@ -1,9 +1,11 @@
 import { Relationship } from '@/modules/Shared/Domain/Relationship/Relationship.ts'
 import { RelationshipCollection } from '@/modules/Shared/Domain/Relationship/RelationshipCollection.ts'
+import type { CategoryId } from '@/modules/Category/Domain/ValueObject/CategoryId.ts'
+import type { CategorySlug } from '@/modules/Category/Domain/ValueObject/CategorySlug.ts'
 
 export class Category {
-  public readonly id: string
-  public readonly slug: string
+  public readonly id: CategoryId
+  public readonly slug: CategorySlug
   public readonly name: string
   public readonly description: string
   public readonly imageUrl: string | null
@@ -16,8 +18,8 @@ export class Category {
   public readonly _childCategories: RelationshipCollection<Category>
 
   constructor(
-    id: string,
-    slug: string,
+    id: CategoryId,
+    slug: CategorySlug,
     name: string,
     description: string,
     imageUrl: string | null,
@@ -25,7 +27,7 @@ export class Category {
     parentId: string | null,
     articlesCount: number,
     parentCategory: Relationship<Category | null> = Relationship.notLoaded(),
-    childCategories: RelationshipCollection<Category> = RelationshipCollection.notLoaded(),
+    childCategories: RelationshipCollection<Category> = RelationshipCollection.notLoaded()
   ) {
     this.id = id
     this.slug = slug

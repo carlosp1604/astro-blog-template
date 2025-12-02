@@ -1,12 +1,13 @@
-import type { SortOrder } from '@/modules/Shared/Domain/CriteriaSortOrder.ts'
+import type { TagId } from '@/modules/Tag/Domain/ValueObject/TagId.ts'
 import type { Locale } from '@/modules/Shared/Domain/LocaleValueObject.ts'
+import type { CategoryId } from '@/modules/Category/Domain/ValueObject/CategoryId.ts'
+import type { SortOrder, SortBy } from '@/modules/Shared/Domain/CriteriaSortOptions.ts'
 
-export type ArticleSortBy = 'relevance' | 'date'
-export type ArticleSortOrder = SortOrder
+type ArticleSortBy = SortBy
+type ArticleSortOrder = SortOrder
 
 export class Pagination {
-  private constructor(public readonly offset: number, public readonly limit: number) {
-  }
+  private constructor(public readonly offset: number, public readonly limit: number) {}
 
   static fromPage(
     page: number,
@@ -41,12 +42,11 @@ export class Pagination {
 }
 
 export class Sort {
-  private constructor(public readonly by: ArticleSortBy, public readonly order: ArticleSortOrder) {
-  }
+  private constructor(public readonly by: ArticleSortBy, public readonly order: ArticleSortOrder) {}
 
-  static create(by?: unknown, order?: unknown) {
+  static create(by?: string, order?: string) {
     const validateBy: ArticleSortBy = by === 'relevance' ? 'relevance' : 'date'
-    const validatedOrder: ArticleSortOrder  = order === 'asc' ? 'asc' : 'desc'
+    const validatedOrder: ArticleSortOrder = order === 'asc' ? 'asc' : 'desc'
 
     return new Sort(validateBy, validatedOrder)
   }
@@ -57,9 +57,10 @@ export class ArticlesCriteria {
     public readonly pagination: Pagination,
     public readonly sort: Sort,
     public readonly locale: Locale,
-    public readonly categoryId?: string,
-  ) {
-  }
+    public readonly categoryId?: CategoryId,
+    public readonly tagId?: TagId,
+    public readonly title?: string
+  ) {}
 
   static create(args: {
     page: number
@@ -69,15 +70,27 @@ export class ArticlesCriteria {
     minPageSize: number
     maxPageSize: number
     locale: Locale
-    sortBy?: unknown
-    sortOrder?: unknown
-    categoryId?: string
+    sortBy?: string
+    sortOrder?: string
+    categoryId?: CategoryId
+    tagId?: TagId
+    title?: string
   }) {
+    let validatedTitle: string | undefined = undefined
+
+    if (args.title !== undefined) {
+      if (args.title.trim() !== '') {
+        validatedTitle = args.title
+      }
+    }
+
     return new ArticlesCriteria(
       Pagination.fromPage(args.page, args.size, args.minPageNumber, args.maxPageNumber, args.minPageSize, args.maxPageSize),
       Sort.create(args.sortBy, args.sortOrder),
       args.locale,
       args.categoryId,
+      args.tagId,
+      validatedTitle
     )
   }
 }

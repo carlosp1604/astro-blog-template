@@ -1,4 +1,4 @@
 export interface GetCategoryBySlugApplicationRequestDto {
-  locale: string
-  slug: string
+  readonly locale: string
+  readonly slug: string
 }

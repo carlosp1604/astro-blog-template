@@ -9,7 +9,17 @@
   "article_card_gallery_sort_by_date_title": "Fecha",
   "article_card_gallery_sort_by_relevance_title": "Relevancia",
   "article_card_image_alt_title": "Imagen destacada del artículo: {title}",
-  "articles_page_h1_title": "Artículos",
+  "article_header_available_versions_title": "Disponible en:",
+  "articles_breadcrumb_title": "Artículos",
+  "articles_page_description": "Explora la lista completa de artículos, ordenados por fecha para acceder fácilmente al contenido más reciente.",
+  "articles_page_h1_title": "Todos los artículos",
+  "articles_page_h1_title_with_page_number": "{title} - Página {pageNumber}",
+  "articles_page_h1_title_with_title_filter": "Resultados de la búsqueda: {title}",
+  "articles_page_p_description": "Explora nuestra colección completa de artículos, tutoriales y guías técnicas. Usa el buscador para encontrar temas específicos",
+  "articles_page_search_bar_input_label_title": "Buscar",
+  "articles_page_search_bar_input_placeholder_title": "Buscar...",
+  "articles_page_search_bar_submit_button_title": "Buscar",
   "articles_page_title": "Todos los artículos",
-  "articles_page_description": "Explora la lista completa de artículos, ordenados por fecha para acceder fácilmente al contenido más reciente."
+  "articles_page_title_with_page_number_title": "{title} - Página {pageNumber}",
+  "articles_page_title_with_title_filter": "Resultados para '{title}'"
 }

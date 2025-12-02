@@ -1,0 +1,23 @@
+---
+import { t } from '@/translations'
+import type { Locale } from '@/config/i18n.config'
+import type { TagApplicationDto } from '@/modules/Tag/Application/TagApplicationDto'
+
+interface Props {
+  tag: TagApplicationDto
+  lang: Locale
+}
+
+const { tag, lang } = Astro.props
+
+const tagDescription = await t(lang, 'tags', 'tag_page_p_description', { name: tag.name })
+---
+
+<header class="space-y-6">
+  <h1 class="heading-1">
+    {tag.name}
+  </h1>
+  <p class="text-lead">
+    {tagDescription}
+  </p>
+</header>

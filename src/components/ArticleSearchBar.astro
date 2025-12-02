@@ -1,0 +1,39 @@
+---
+import { t } from '@/translations'
+import { ARTICLES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { buildRelativeUrl } from '@/modules/Shared/Infrastructure/Frontend/Url'
+import type { Locale } from '@/config/i18n.config'
+
+interface Props {
+  lang: Locale
+}
+
+const { lang } = Astro.props
+const searchAction = buildRelativeUrl(lang, [ ARTICLES_PATH ])
+
+const inputLabelTitle = await t(lang, 'articles', 'articles_page_search_bar_input_label_title')
+const inputPlaceholderTitle = await t(lang, 'articles', 'articles_page_search_bar_input_placeholder_title')
+const submitButtonTitle = await t(lang, 'articles', 'articles_page_search_bar_submit_button_title')
+---
+
+<form
+  method="GET"
+  action={searchAction}
+  class="flex gap-2 w-full overflow-hidden"
+>
+  <label for="search-input" class="sr-only">{inputLabelTitle}</label>
+  <input
+    type="search"
+    id="search-input"
+    name="title"
+    placeholder={inputPlaceholderTitle}
+    class="[&::-webkit-search-cancel-button]:appearance-none min-w-0 px-4 py-2 rounded-md bg-app-surface text-app-text placeholder-app-text-secondary focus:bg-app-hover outline-none"
+  />
+
+  <button
+    type="submit"
+    class="px-4 py-2 font-medium text-white bg-app-brand-primary rounded-lg hover:bg-app-brand-secondary duration-300 cursor-pointer"
+  >
+    {submitButtonTitle}
+  </button>
+</form>

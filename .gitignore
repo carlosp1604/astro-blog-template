@@ -28,6 +28,3 @@ pnpm-debug.log*
 
 # vscode setting folder
 .vscode/
-
-# articles folder
-data/articles.json

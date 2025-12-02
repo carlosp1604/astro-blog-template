@@ -40,7 +40,7 @@ export class CategoryModelTranslator {
       rawModel.parentId,
       rawModel.articlesCount ? rawModel.articlesCount : 0,
       parentCategory,
-      childrenCategories,
+      childrenCategories
     )
   }
 }

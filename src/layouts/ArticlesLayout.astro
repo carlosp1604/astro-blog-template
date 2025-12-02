@@ -1,37 +1,90 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import Seo, { type Hreflang } from '@/components/Seo.astro'
-import { getLocale, t } from '@/translations'
-import { i18nConfig } from '@/config/i18n.config'
+import Seo, { type BreadcrumbItem, type CollectionPage } from '@/components/Seo.astro'
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { QUERY_PARAM } from '@/modules/Shared/Infrastructure/Frontend/QueryParam'
+import { ARTICLES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { type Locale, i18nConfig } from '@/config/i18n.config'
+import type { ArticlesPagePaginationData } from '@/modules/Article/Infrastructure/Frontend/ArticlesPageLoader'
+import {
+  buildCanonical,
+  buildHreflangs,
+  buildRelativeUrl
+} from '@/modules/Shared/Infrastructure/Frontend/Url'
 
-const lang = getLocale(Astro.url.pathname)
+interface Props {
+  pagination: ArticlesPagePaginationData
+  lang: Locale
+}
 
-const siteBaseUrl = import.meta.env.PUBLIC_SITE_BASE_URL as string
-const siteName = import.meta.env.PUBLIC_SITE_NAME as string
-const canonical = `${siteBaseUrl}/${lang}/articles`
+const { pagination, lang } = Astro.props
 
-const hreflangs: Array<Hreflang> = i18nConfig.locales.map((locale) => {
-  return {
-    lang: locale,
-    url: `${siteBaseUrl}/${locale}/articles`
-  }
-})
+const siteName = env.PUBLIC_SITE_NAME
+const siteBaseUrl = env.PUBLIC_SITE_BASE_URL
 
-const title = await t(lang, 'articles', 'articles_page_title')
+const pageSearchParam = pagination.page > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${pagination.page}`) : undefined
+
+const canonical = buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH ], pageSearchParam), siteBaseUrl)
+const hreflangs = buildHreflangs(i18nConfig.locales, siteBaseUrl, (locale) => (buildRelativeUrl(locale, [ ARTICLES_PATH ], pageSearchParam)))
+
+let title: string
+
+if (pagination.title) {
+  title = await t(lang, 'articles', 'articles_page_title_with_title_filter', { title: pagination.title })
+} else {
+  title = await t(lang, 'articles', 'articles_page_title')
+}
+
+if (pagination.page > 1) {
+  const currentTitle = title
+
+  title = await t(lang, 'articles', 'articles_page_title_with_page_number_title', { title: currentTitle, pageNumber: pagination.page })
+}
+
 const description = await t(lang, 'articles', 'articles_page_description')
+const articlesBreadCrumbTranslation = await t(lang, 'articles', 'articles_breadcrumb_title')
+
+const breadCrumbs: Array<BreadcrumbItem> = [
+  { name: siteName, url: buildCanonical(buildRelativeUrl(lang), siteBaseUrl), position: 1 },
+  { name: articlesBreadCrumbTranslation, url: buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH ]), siteBaseUrl), position: 2 },
+]
+
+let prevPageSearchParam = (pagination.page - 1) > 1 ? new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page - 1)}`) : undefined
+let nextPageSearchParam = new URLSearchParams(`${QUERY_PARAM.PAGE}=${String(pagination.page + 1)}`)
+
+const emptyPage = pagination.articlesSlugWithTitle.length === 0
+const isSearchActive = !!pagination.title
+
+let collection: CollectionPage | undefined = undefined
+
+if (!emptyPage && !isSearchActive) {
+  collection = {
+    prev: pagination.hasPrev ? buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH ], prevPageSearchParam), siteBaseUrl) : undefined,
+    next: pagination.hasNext ? buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH ], nextPageSearchParam), siteBaseUrl) : undefined,
+    totalItems: pagination.totalItems,
+    offset: pagination.offset,
+    items: pagination.articlesSlugWithTitle.map((articleSlugWithTitle, index) => ({
+      url: buildCanonical(buildRelativeUrl(lang, [ ARTICLES_PATH, articleSlugWithTitle.slug ]), siteBaseUrl),
+      position: pagination.offset + index + 1,
+      name: articleSlugWithTitle.title,
+    }))
+  }
+}
 ---
 
-<BaseLayout>
+<BaseLayout lang={lang}>
   <Seo
     title={title}
     description={description}
     canonical={canonical}
     lang={lang}
     hreflangs={hreflangs}
-    ogImage={'/og/posts.png'}
     type={'website'}
     slot={'head'}
-    siteName={siteName}
+    breadcrumbs={breadCrumbs}
+    collection={collection}
+    noIndex={emptyPage || isSearchActive}
   />
 
   <main class="flex-1">

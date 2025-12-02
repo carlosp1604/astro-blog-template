@@ -1,29 +1,57 @@
 ---
-import { t, getLocale } from '@/translations'
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { getNavItems } from '@/modules/Shared/Infrastructure/Frontend/NavItems'
+import { isActiveLink } from '@/modules/Shared/Infrastructure/Frontend/Url'
+import type { Locale } from '@/config/i18n.config'
+import ThemeSwitcher from './ThemeSwitcher.astro'
 
-const lang = getLocale(Astro.url.pathname)
+interface Props {
+  lang: Locale
+}
 
-const siteName = import.meta.env.PUBLIC_SITE_NAME as string
+const { lang } = Astro.props
+
+const siteName = env.PUBLIC_SITE_NAME
+
+const navItems = await getNavItems(lang)
+
+const currentPath = Astro.url.pathname
 
 const year = String(new Date().getFullYear())
 const copyrightTranslation = await t(lang, 'common', 'footer_copyright_title', { siteName, year })
-const homeLinkTranslation = await t(lang, 'common', 'footer_home_link_title')
 const navigationFooterAriaLabelTranslation = await t(lang, 'common', 'footer_navigation_section_aria_label_title')
 ---
 
-<footer class="bg-app-surface text-app-text border-t border-app-border">
+<footer class="bg-app-surface text-app-text border-t border-app-border text-body">
   <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
-    <p class="text-sm">
-      {copyrightTranslation}
-    </p>
+    <div class="flex flex-col gap-4 md:gap-2 items-center">
+      <p class="text-app-text-secondary">
+        {copyrightTranslation}
+      </p>
+
+      <ThemeSwitcher lang={lang} />
+    </div>
+
 
     <nav aria-label={navigationFooterAriaLabelTranslation}>
-      <ul class="flex gap-4">
-        <li>
-          <a href='/' class="text-sm hover:underline">
-            {homeLinkTranslation}
-          </a>
-        </li>
+      <ul class="flex flex-wrap gap-4">
+        { navItems.map((item) => {
+          const active = isActiveLink(currentPath, item.href, item.exact)
+
+          return (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  active ? 'font-bold underline' : 'hover:underline',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   </div>

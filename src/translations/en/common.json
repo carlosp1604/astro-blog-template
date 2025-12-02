@@ -1,9 +1,18 @@
 {
-
   "footer_copyright_title": "{year} © {siteName}. All rights reserved",
-  "footer_home_link_title": "Home",
   "footer_navigation_section_aria_label_title": "Footer navigation",
   "language_switcher_aria_label_title": "Language Selector",
-  "nav_bar_aria_label_title": "Main navigation",
-  "nav_bar_home_link_title": "Home"
+  "nav_bar_desktop_aria_label_title": "Desktop main navigation",
+  "nav_bar_mobile_aria_label_title": "Mobile main navigation",
+  "nav_item_articles_link_title": "Articles",
+  "nav_item_categories_link_title": "Categories",
+  "nav_item_home_link_title": "Home",
+  "nav_item_tags_link_title": "Tags",
+  "rss_page_description": "The latest notices and articles from {siteName}",
+  "rss_page_title": "{siteName} - Blog {lang}",
+  "seo_default_image_alt_title": "Default cover image for {siteName}",
+  "theme_switcher_aria_label": "Theme Selector",
+  "theme_switcher_dark_theme_title": "Dark",
+  "theme_switcher_light_theme_title": "Light",
+  "theme_switcher_system_theme_title": "System"
 }

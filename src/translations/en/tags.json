@@ -1,0 +1,13 @@
+{
+  "tags_breadcrumb_title": "Tags",
+  "tags_page_description": "Find articles organized by topic to easily access the content that interests you most",
+  "tags_page_h1_title": "Tags",
+  "tags_page_p_description": "Tags index. Filter our content by specific technologies, concepts, or keywords",
+  "tags_page_title": "Browse all tags",
+  "tag_card_aria_label_title": "See articles tagged by {title}",
+  "tag_card_articles_count": "{articlesNumber} articles",
+  "tag_card_gallery_section_title": "Tags",
+  "tag_page_description": "Explore all articles related to {tag} on our blog",
+  "tag_page_title": "Articles tagged by {tag}",
+  "tag_page_p_description": "Explore all articles, tutorials, and resources tagged with {name}"
+}

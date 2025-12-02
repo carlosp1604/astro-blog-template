@@ -1,3 +1,3 @@
 export interface GetCategorySlugsByIdApplicationRequestDto {
-  id: string
+  readonly id: string
 }

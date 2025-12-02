@@ -8,7 +8,7 @@ export class CategoryWithParentAndChildrenApplicationDtoTranslator {
     const childrenCategories: Array<ChildCategoryApplicationDto> = domain.childCategories.map((child) => ({
       id: child.id,
       name: child.name,
-      slug: child.slug,
+      slug: child.slug
     }))
 
     let parentCategory: ParentCategoryApplicationDto | null = null
@@ -17,7 +17,7 @@ export class CategoryWithParentAndChildrenApplicationDtoTranslator {
       parentCategory = {
         id: domain.parentCategory.id,
         name: domain.parentCategory.name,
-        slug: domain.parentCategory.slug,
+        slug: domain.parentCategory.slug
       }
     }
 

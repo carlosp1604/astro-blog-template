@@ -1,60 +1,93 @@
 ---
+import { t } from '@/translations'
+import { CATEGORIES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { buildRelativeUrl } from '@/modules/Shared/Infrastructure/Frontend/Url'
 import type { Locale } from '@/config/i18n.config'
 import type {
   CategoryWithParentAndChildrenApplicationDto
 } from '@/modules/Category/Application/CategoryWithParentAndChildrenApplicationDto'
 
 interface Props {
-    lang: Locale
-    category: CategoryWithParentAndChildrenApplicationDto
+  lang: Locale
+  category: CategoryWithParentAndChildrenApplicationDto
 }
 
 const { lang, category } = Astro.props
+
+const parentCategoryTranslation = await t(lang, 'categories', 'category_header_parent_category_title')
+const childrenCategoriesTranslation = await t(lang, 'categories', 'category_header_children_categories_title')
 ---
 
-<header class="space-y-6">
-  <div>
-    <h1 class="text-2xl font-bold">{category.name}</h1>
-    {category.description && (
-      <p class="text-app-text-secondary mt-2">{category.description}</p>
-    )}
+<header class="w-full">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+
+    <div class="flex flex-col gap-6 order-2 md:order-1">
+
+      <div>
+        <h1 class="heading-1">
+          {category.name}
+        </h1>
+        {category.description && (
+          <p class="text-lead text-app-text-secondary mt-4">
+            {category.description}
+          </p>
+        )}
+      </div>
+
+      {(category.parentCategory || category.childrenCategories.length > 0) && (
+        <div class="flex flex-col gap-3 pt-4 border-t border-app-border/10">
+
+          {category.parentCategory && (
+            <div class="text-sm">
+              <span class="font-semibold opacity-80">
+                {parentCategoryTranslation}:
+              </span>
+              <a
+                href={buildRelativeUrl(lang, [ CATEGORIES_PATH, category.parentCategory.slug ])}
+                class="ml-1 text-app-brand-primary hover:underline font-medium"
+              >
+                {category.parentCategory.name}
+              </a>
+            </div>
+          )}
+
+          {category.childrenCategories.length > 0 && (
+            <div class="text-sm">
+              <span class="font-semibold opacity-80">
+                {childrenCategoriesTranslation}:
+              </span>
+              <ul class="inline-flex flex-wrap gap-2 ml-2">
+                {category.childrenCategories.map((child, index) => (
+                  <li class="inline">
+                    <a
+                      href={buildRelativeUrl(lang, [ CATEGORIES_PATH, child.slug ])}
+                      class="text-app-brand-primary hover:underline"
+                    >
+                      {child.name}
+                    </a>
+                    {index < category.childrenCategories.length - 1 && <span class="text-app-text-secondary">,</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+
+    <div class="order-1 md:order-2">
+      {category.imageUrl ? (
+        <div class="relative w-full aspect-video md:aspect-[4/3] overflow-hidden rounded-xl shadow-sm">
+          <img
+            src={category.imageUrl}
+            alt={category.imageAltTitle ?? category.name}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <div class="hidden md:block w-full aspect-[4/3] rounded-xl bg-app-body/5 border border-app-border/10"></div>
+      )}
+    </div>
+
   </div>
-
-  {category.imageUrl && (
-    <img
-      src={category.imageUrl}
-      alt={category.imageAltTitle ?? category.name}
-      class="w-full max-h-64 object-cover rounded-lg"
-    />
-  )}
-
-  {category.parentCategory && (
-    <div>
-      <span class="font-semibold">Categoría padre:</span>
-      <a
-        href={`/${lang}/categories/${category.parentCategory.slug}`}
-        class="ml-2 text-app-brand-primary hover:underline"
-      >
-        {category.parentCategory.name}
-      </a>
-    </div>
-  )}
-
-  {category.childrenCategories.length > 0 && (
-    <div>
-      <span class="font-semibold">Categorías hijas:</span>
-      <ul class="flex flex-wrap gap-3 mt-2">
-        {category.childrenCategories.map((child) => (
-          <li>
-            <a
-              href={`/${lang}/categories/${child.slug}`}
-              class="text-app-brand-primary hover:underline"
-            >
-              {child.name}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
 </header>

@@ -1,12 +1,14 @@
 ---
-import type { CategoryApplicationDto } from '@/modules/Category/Application/CategoryApplicationDto'
 import CategoryCard from './CategoryCard.astro'
-import type { Locale } from '@/config/i18n.config'
 import { t } from '@/translations'
+import { CATEGORIES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { buildRelativeUrl } from '@/modules/Shared/Infrastructure/Frontend/Url'
+import type { Locale } from '@/config/i18n.config'
+import type { CategoryApplicationDto } from '@/modules/Category/Application/CategoryApplicationDto'
 
 interface Props {
-    lang: Locale
-    categories: Array<CategoryApplicationDto>
+  lang: Locale
+  categories: Array<CategoryApplicationDto>
 }
 
 const { lang, categories } = Astro.props
@@ -19,15 +21,16 @@ const sectionTitleTranslation = await t(lang, 'categories', 'category_card_galle
     {sectionTitleTranslation}
   </h2>
 
-  <ul class="grid grid-cols-2 gap-4 tb:grid-cols-4 md:grid-cols-6">
+  <ul class="grid grid-cols-2 gap-2 md:gap-4 tb:grid-cols-4">
     {categories.map((category) => (
       <li>
         <CategoryCard
           title={category.name}
-          href={`/${lang}/categories/${category.slug}`}
+          href={buildRelativeUrl(lang, [ CATEGORIES_PATH, category.slug ])}
           image={category.imageUrl ?? undefined}
           altTitle={category.imageAltTitle ?? undefined}
           articleCount={category.articlesCount}
+          lang={lang}
         />
       </li>
     ))}

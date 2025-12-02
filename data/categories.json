@@ -1,6 +1,6 @@
 [
   {
-    "id": "cat-1",
+    "id": "a9b65999-c735-4f36-a7ee-0c95c6173408",
     "translations": {
       "es": {
         "name": "Desarrollo",
@@ -11,10 +11,10 @@
         "description": "Articles related to web development"
       }
     },
-    "imageUrl": "/images/categories/desarrollo.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
     "imageAltTitle": {
-      "es": "Imagen de categoría Desarrollo",
-      "en": "Development category image"
+      "es": "Código de programación en la pantalla de un ordenador portátil",
+      "en": "Programming code on a laptop screen"
     },
     "parentId": null,
     "slugs": {
@@ -23,7 +23,7 @@
     }
   },
   {
-    "id": "cat-2",
+    "id": "c77afa23-f825-4984-a8d9-32c9f133fd43",
     "translations": {
       "es": {
         "name": "Astro.js",
@@ -34,10 +34,10 @@
         "description": "Tutorials and guides about Astro.js"
       }
     },
-    "imageUrl": "/images/categories/astro.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
     "imageAltTitle": {
-      "es": "Logo de Astro.js",
-      "en": "Astro.js logo"
+      "es": "Vista de la tierra desde el espacio con redes digitales conectadas",
+      "en": "View of earth from space with connected digital networks"
     },
     "parentId": null,
     "slugs": {
@@ -46,7 +46,7 @@
     }
   },
   {
-    "id": "cat-3",
+    "id": "0b9ce242-6b67-4468-b8d6-7350b57cc0fd",
     "translations": {
       "es": {
         "name": "SEO",
@@ -57,10 +57,10 @@
         "description": "Search Engine Optimization"
       }
     },
-    "imageUrl": "/images/categories/seo.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1200&q=80",
     "imageAltTitle": {
-      "es": "Ilustración de SEO",
-      "en": "SEO illustration"
+      "es": "Lupa enfocando gráficos de crecimiento digital",
+      "en": "Magnifying glass focusing on digital growth charts"
     },
     "parentId": null,
     "slugs": {

@@ -1,0 +1,17 @@
+Beyond minifying CSS and optimizing images, there are critical metrics that Google uses to rank your site: the **Core Web Vitals**.
+
+## Main Metrics
+
+* **LCP (Largest Contentful Paint):** How long it takes for the largest visible element to load.
+* **CLS (Cumulative Layout Shift):** How much the page moves while loading (visual stability).
+* **FID (First Input Delay):** How long the page takes to react to the user's first interaction.
+
+## Optimization Techniques
+
+### Lazy Loading
+
+Load images only when they enter the viewport. In modern HTML, it's as easy as:
+
+```html
+<img src="photo.jpg" loading="lazy" alt="Description" />
+```

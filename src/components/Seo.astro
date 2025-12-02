@@ -1,65 +1,184 @@
 ---
+import { t } from '@/translations'
+import { env } from '~/env.loader'
+import { RSS_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { toAbsoluteUrl } from '@/modules/Shared/Infrastructure/Frontend/Url'
+import { i18nConfig, type Locale } from '@/config/i18n.config'
+import { buildCanonical, buildRelativeUrl } from '@/modules/Shared/Infrastructure/Frontend/Url'
+
+export interface PageImage {
+  path: string
+  altTitle: string
+}
+
 export interface Hreflang {
-    lang: string
-    url: string
+  lang: string
+  url: string
+}
+
+export interface BreadcrumbItem {
+  name: string
+  url: string,
+  position: number
+}
+
+interface CollectionPageItem {
+  url: string
+  name: string
+  position: number
+}
+
+export interface CollectionPage {
+  prev?: string
+  next?: string
+  totalItems: number
+  offset: number
+  items: Array<CollectionPageItem>
+}
+
+export interface ArticleData {
+  author: {
+    name: string,
+    //TODO: Define an author URL
+    // url: string
+  }
+  lang: string,
+  tags: Array<string>,
+  section: Array<string>,
+  isAccessibleForFree: boolean,
+  publishedTime: string
+  modifiedTime: string
+  wordsCount?: number,
 }
 
 interface Props {
-    title: string
-    description: string
-    canonical: string
-    lang: string
-    hreflangs?: Array<Hreflang>
-    ogImage?: string
-    type?: 'website' | 'article'
-    publishedTime?: string
-    modifiedTime?: string
-    author?: string
-    tags?: Array<string>
-    siteName?: string
+  title: string
+  description: string
+  canonical: string
+  lang: Locale
+  hreflangs?: Array<Hreflang>
+  image?: PageImage
+  type?: 'website' | 'article'
+  articleData?: ArticleData
+  breadcrumbs?: BreadcrumbItem[]
+  collection?: CollectionPage
+  noIndex?: boolean
 }
 
 const {
-    title,
-    description,
-    canonical,
-    lang,
-    hreflangs = [],
-    ogImage = '/default-og.png',
-    type = 'website',
-    publishedTime,
-    modifiedTime,
-    author,
-    tags = [],
-    siteName = ''
+  title,
+  description,
+  canonical,
+  lang,
+  hreflangs = [],
+  image = '',
+  type = 'website',
+  articleData,
+  breadcrumbs = [],
+  collection,
+  noIndex = false,
 } = Astro.props
 
-const jsonLd =
-    type === 'article'
-        ? {
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: title,
-            description,
-            author: author ? { '@type': 'Person', name: author } : undefined,
-            datePublished: publishedTime,
-            dateModified: modifiedTime,
-            mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
-            image: ogImage
+const siteName = env.PUBLIC_SITE_NAME
+const siteBaseUrl = env.PUBLIC_SITE_BASE_URL
+const siteImageUrl = env.PUBLIC_SITE_IMAGE_URL
+
+const defaultImageAltTitle = await t(lang, 'common', 'seo_default_image_alt_title', { siteName })
+const finalImage: PageImage = image ? image : { path: toAbsoluteUrl(siteImageUrl, siteBaseUrl), altTitle: defaultImageAltTitle }
+const finalTitle = title.includes(siteName) ? title : `${title} | ${siteName}`
+const robotsContent = `${noIndex ? 'noindex' : 'index'},follow`
+
+const jsonLdBlocks: unknown[] =
+  type === 'article' && articleData ?
+    [ {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonical
+      },
+      headline: title,
+      description,
+      author: articleData.author ? {
+        '@type': 'Person',
+        name: articleData.author,
+        //TODO: Define an author URL
+        // url: articleData.author.url
+      } : undefined,
+      publisher: {
+        '@type': 'Organization',
+        name: siteName,
+        logo: {
+          '@type': 'ImageObject',
+          url: toAbsoluteUrl(env.PUBLIC_SITE_IMAGE_URL, env.PUBLIC_SITE_BASE_URL)
         }
-        : {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: siteName,
-            url: canonical,
-            description
-        }
+      },
+      datePublished: articleData.publishedTime,
+      dateModified: articleData.modifiedTime,
+      articleSection: articleData.section,
+      keywords: articleData.tags.join(','),
+      image: finalImage.path,
+      inLanguage: articleData.lang,
+      isAccessibleForFree: articleData.isAccessibleForFree,
+      ...articleData.wordsCount ? { wordsCount: articleData.wordsCount } : {},
+    } ] :
+    [ {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteName,
+      url: canonical,
+      description
+    } ]
+
+if (breadcrumbs.length > 0) {
+  jsonLdBlocks.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((breadcrumb) => ({
+      '@type': 'ListItem',
+      position: breadcrumb.position,
+      name: breadcrumb.name,
+      item: breadcrumb.url
+    }))
+  })
+}
+
+if (collection) {
+  jsonLdBlocks.push({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    headline: title,
+    description: description,
+    url: canonical,
+    mainEntity: {
+      '@type': 'ItemList',
+      ...collection.totalItems ? { numberOfItems: collection.totalItems }: {},
+      itemListElement: collection.items.map((item) => ({
+        '@type': 'ListItem',
+        position: item.position,
+        url: item.url,
+        name: item.name,
+      }))
+    }
+  })
+}
+
 ---
 
-<title>{title}</title>
+<title>{finalTitle}</title>
 <meta name="description" content={description} />
-<meta name="robots" content="index,follow" />
+<meta name="robots" content={robotsContent} />
 <link rel="canonical" href={canonical} />
+
+<!-- RSS -->
+{i18nConfig.locales.map((locale) => (
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${siteName} - RSS (${locale.toUpperCase()})`}
+    href={buildCanonical(buildRelativeUrl(locale, [ RSS_PATH ]), env.PUBLIC_SITE_BASE_URL)}
+  />
+))}
 
 <!-- Open Graph -->
 <meta property="og:title" content={title} />
@@ -68,31 +187,42 @@ const jsonLd =
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content={lang} />
 <meta property="og:site_name" content={siteName} />
-<meta property="og:image" content={ogImage} />
+<meta property="og:image" content={finalImage.path} />
+<meta property="og:image:alt" content={finalImage.altTitle} />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image" content={finalImage.path} />
+<meta name="twitter:image:alt" content={finalImage.altTitle} />
+
+<!-- List -->
+<>
+  { collection && collection.prev && <link rel="prev" href={collection.prev} /> }
+  { collection && collection.next && <link rel="next" href={collection.next} /> }
+</>
 
 <!-- Hreflangs -->
-{hreflangs.map((h) => (
-<link rel="alternate" hreflang={h.lang} href={h.url} />
-    ))}
+{ hreflangs.map((h) => (<link rel="alternate" hreflang={h.lang} href={h.url} />)) }
 <link rel="alternate" hreflang="x-default" href={canonical} />
 
 <!-- Article extra -->
-{type === 'article' && (
-<>
-    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
-    {author && <meta property="article:author" content={author} />}
-    {tags.map((tag) => (
+{ type === 'article' && (
+  <>
+    {articleData && <meta property="article:published_time" content={articleData.publishedTime} />}
+    {articleData && <meta property="article:modified_time" content={articleData.modifiedTime} />}
+    {articleData && articleData.author && <meta property="article:author" content={articleData.author.name} />}
+    {articleData && articleData.section.map((section) => (
+      <meta property="article:section" content={section} />
+    ))}
+    {articleData && articleData.tags.map((tag) => (
       <meta property="article:tag" content={tag} />
     ))}
-</>
-    )}
+  </>
+)}
 
 <!-- JSON-LD structured data -->
-<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd, null, 2)} />
+{ jsonLdBlocks.map((block) => (
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(block, null, 2)} />
+))}

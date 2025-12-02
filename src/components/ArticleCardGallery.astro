@@ -1,16 +1,20 @@
 ---
-import type { ArticleApplicationDto } from '@/modules/Article/Application/ArticleApplicationDto'
 import ArticleCard from './ArticleCard.astro'
 import { t } from '@/translations'
+import { QUERY_PARAM } from '@/modules/Shared/Infrastructure/Frontend/QueryParam'
+import { ARTICLES_PATH } from '@/modules/Shared/Infrastructure/Frontend/Paths'
+import { buildRelativeUrl } from '@/modules/Shared/Infrastructure/Frontend/Url'
+import { ARTICLE_SORT_OPTIONS, type ArticleSortOption } from '@/modules/Shared/Infrastructure/Frontend/ArticleSortOptions'
 import type { Locale } from '@/config/i18n.config'
+import type { ArticleApplicationDto } from '@/modules/Article/Application/ArticleApplicationDto'
 
 interface Props {
-    lang: Locale
-    articles: Array<ArticleApplicationDto>
-    page: number
-    hasNext: boolean
-    hasPrev: boolean
-    sortBy: string
+  lang: Locale
+  articles: Array<ArticleApplicationDto>
+  page: number
+  hasNext: boolean
+  hasPrev: boolean
+  sortBy: string
 }
 
 const { lang, articles, page, hasNext, hasPrev, sortBy } = Astro.props
@@ -23,46 +27,68 @@ const paginationNextButtonTranslation = await t(lang, 'articles', 'article_card_
 const paginationPrevButtonTranslation = await t(lang, 'articles', 'article_card_gallery_pagination_previous_button_title')
 const paginationNButtonTranslation = await t(lang, 'articles', 'article_card_gallery_pagination_page_n_button_title', { pageNumber: page })
 const sectionTitleTranslation = await t(lang, 'articles', 'article_card_gallery_section_title')
+
+const sortOptionTranslations: Record<ArticleSortOption, string> = {
+  relevance: sortByRelevanceTranslation,
+  date: sortByDateTranslation,
+}
 ---
 
 <section aria-labelledby="articles-section-title">
   <h2 id="articles-section-title" class="sr-only">
     {sectionTitleTranslation}
   </h2>
-  <div>
-    <label for="sort">{sortByTranslation}</label>
+  <div class="mb-4">
+    <label for="sort">
+      {sortByTranslation}
+    </label>
     <select
       id="sort"
       name="sort"
-      onchange="location.href='?page=1&sort='+this.value"
+      onchange={`
+        const params = new URLSearchParams(window.location.search);
+        params.set('${QUERY_PARAM.PAGE}', '1');
+        params.set('${QUERY_PARAM.SORT}', this.value);
+        window.location.search = params.toString();
+      `}
       aria-label={sortByTranslation}
     >
-      <option value="date" selected={sortBy === 'date'}>{sortByDateTranslation}</option>
-      <option value="relevance" selected={sortBy === 'relevance'}>{sortByRelevanceTranslation}</option>
+      { ARTICLE_SORT_OPTIONS.map((option) => (
+        <option value={option} selected={sortBy === option}>
+          { sortOptionTranslations[option] }
+        </option>
+      ))}
     </select>
   </div>
 
-  <ul class="grid grid-cols-2 tb:grid-cols-3 md:grid-cols-4 gap-2">
+  <ul class="grid grid-cols-2 gap-2 md:gap-4 tb:grid-cols-3">
     {articles.map((article) => (
       <li>
         <ArticleCard
           description={article.description}
           title={article.title}
-          href={`/${lang}/articles/${article.slug}`}
+          href={buildRelativeUrl(lang, [ ARTICLES_PATH, article.slug ])}
           altTitle={article.imageAltTitle ?? undefined}
           image={article.imageUrl}
+          lang={lang}
         />
       </li>
     ))}
   </ul>
 
-  <nav aria-label={paginationAriaLabelTranslation}>
+  <nav aria-label={paginationAriaLabelTranslation} class="mt-10 flex items-center justify-center">
     {hasPrev && (
-      <a href={`?page=${page - 1}&sort=${sortBy}`}>{paginationPrevButtonTranslation}</a>
+      <a href={`?${QUERY_PARAM.PAGE}=${page - 1}&${QUERY_PARAM.SORT}=${sortBy}`}>
+        {paginationPrevButtonTranslation}
+      </a>
     )}
-    <span aria-current="page">{paginationNButtonTranslation}</span>
+    <span aria-current="page">
+      {paginationNButtonTranslation}
+    </span>
     {hasNext && (
-      <a href={`?page=${page + 1}&sort=${sortBy}`}>{paginationNextButtonTranslation}</a>
+      <a href={`?${QUERY_PARAM.PAGE}=${page + 1}&${QUERY_PARAM.SORT}=${sortBy}`}>
+        {paginationNextButtonTranslation}
+      </a>
     )}
   </nav>
 </section>
