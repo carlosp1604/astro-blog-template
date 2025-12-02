@@ -11,7 +11,10 @@ export default defineConfig({
   site: import.meta.env.PUBLIC_SITE_BASE_URL,
   output: 'server',
   adapter: cloudflare({
-    imageService: 'passthrough'
+    imageService: 'passthrough',
+    platformProxy: {
+      enabled: true
+    }
   }),
   vite: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
