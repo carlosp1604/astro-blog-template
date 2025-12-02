@@ -1,28 +1,24 @@
-import { z } from 'zod'
-import { config } from 'dotenv'
-import { resolve } from 'path'
 import { EnvSchema } from './env.schema'
 import type { Env } from './env.schema'
+import { z } from 'zod'
 
-function loadEnvFile(): void {
-  const nodeEnv = import.meta.env.NODE_ENV || 'development'
+const loadedEnv = {
+  NODE_ENV: import.meta.env.NODE_ENV,
+  LOG_LEVEL: import.meta.env.LOG_LEVEL,
 
-  const projectRoot = process.cwd()
+  PAGINATION_MAX_PAGE_NUMBER: import.meta.env.PAGINATION_MAX_PAGE_NUMBER,
+  PAGINATION_MIN_PAGE_NUMBER: import.meta.env.PAGINATION_MIN_PAGE_NUMBER,
+  PAGINATION_MAX_PAGE_SIZE: import.meta.env.PAGINATION_MAX_PAGE_SIZE,
+  PAGINATION_MIN_PAGE_SIZE: import.meta.env.PAGINATION_MIN_PAGE_SIZE,
 
-  const basePath = resolve(projectRoot, '.env')
-
-  config({ path: basePath })
-
-  if (nodeEnv !== 'production') {
-    const envFilePath = resolve(projectRoot, `.env.${nodeEnv}`)
-
-    config({ path: envFilePath, override: true })
-  }
+  PUBLIC_DEFAULT_PAGE_SIZE: import.meta.env.PUBLIC_DEFAULT_PAGE_SIZE,
+  PUBLIC_SITE_BASE_URL: import.meta.env.PUBLIC_SITE_BASE_URL,
+  PUBLIC_SITE_NAME: import.meta.env.PUBLIC_SITE_NAME,
+  PUBLIC_SITE_IMAGE_URL: import.meta.env.PUBLIC_SITE_IMAGE_URL,
+  PUBLIC_SITE_LOGO_URL: import.meta.env.PUBLIC_SITE_LOGO_URL
 }
 
-loadEnvFile()
-
-const parsedEnv = EnvSchema.safeParse(import.meta.env)
+const parsedEnv = EnvSchema.safeParse(loadedEnv)
 
 if (!parsedEnv.success) {
   console.error('❌ Invalid environment variables:', z.flattenError(parsedEnv.error))
