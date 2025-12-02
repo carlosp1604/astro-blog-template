@@ -5,6 +5,7 @@
   "repository": "git@github.com:carlosp1604/astro-blog-template.git",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
