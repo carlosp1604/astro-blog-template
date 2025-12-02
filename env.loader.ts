@@ -5,7 +5,7 @@ import { EnvSchema } from './env.schema'
 import type { Env } from './env.schema'
 
 function loadEnvFile(): void {
-  const nodeEnv = process.env.NODE_ENV || 'development'
+  const nodeEnv = import.meta.env.NODE_ENV || 'development'
 
   const projectRoot = process.cwd()
 
@@ -22,7 +22,7 @@ function loadEnvFile(): void {
 
 loadEnvFile()
 
-const parsedEnv = EnvSchema.safeParse(process.env)
+const parsedEnv = EnvSchema.safeParse(import.meta.env)
 
 if (!parsedEnv.success) {
   console.error('❌ Invalid environment variables:', z.flattenError(parsedEnv.error))
