@@ -1,7 +1,4 @@
-import path from 'path'
 import { z } from 'zod'
-
-const PROJECT_ROOT = process.cwd()
 
 const AssetPathSchema = z.union([
   z.url(),
@@ -9,18 +6,6 @@ const AssetPathSchema = z.union([
     .startsWith('/', { message: 'Local path must start with \'/\'' })
     .refine((value) => !value.includes('..'), { message: 'Path cannot contain \'..\'' })
     .refine((val) => !/[<>:"|?*]/.test(val), { message: 'Local path contains invalid file system characters' })
-    .refine(
-      (value) => {
-        const publicDir = path.join(PROJECT_ROOT, 'public')
-
-        const relativeValue = value.startsWith('/') ? value.slice(1) : value
-
-        const resolvedPath = path.resolve(publicDir, relativeValue)
-
-        return resolvedPath.startsWith(publicDir)
-      },
-      { message: 'Path must resolve within the public directory' }
-    )
     .default('')
 ])
 
