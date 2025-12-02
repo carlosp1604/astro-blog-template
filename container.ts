@@ -1,5 +1,7 @@
-import * as fs from 'fs'
 import pino from 'pino'
+import tagsData from '@/data/tags.json'
+import articlesData from '@/data/articles.json'
+import categoriesData from '@/data/categories.json'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { env } from '~/env.loader.ts'
 import { GetTags } from '@/modules/Tag/Application/GetTags/GetTags.ts'
@@ -31,22 +33,13 @@ const container = createContainer({
 container.register({
   /** Data **/
   articles: asFunction(() => {
-    const jsonPath = env.ARTICLES_DATA_PATH
-    const file = fs.readFileSync(jsonPath, 'utf-8')
-
-    return JSON.parse(file) as Array<ArticleJsonModel>
+    return articlesData as Array<ArticleJsonModel>
   }).setLifetime(Lifetime.SINGLETON),
   categories: asFunction(() => {
-    const jsonPath = env.CATEGORIES_DATA_PATH
-    const file = fs.readFileSync(jsonPath, 'utf-8')
-
-    return JSON.parse(file) as Array<CategoryJsonModel>
+    return categoriesData as Array<CategoryJsonModel>
   }).setLifetime(Lifetime.SINGLETON),
   tags: asFunction(() => {
-    const jsonPath = env.TAGS_DATA_PATH
-    const file = fs.readFileSync(jsonPath, 'utf-8')
-
-    return JSON.parse(file) as Array<TagJsonModel>
+    return tagsData as Array<TagJsonModel>
   }).setLifetime(Lifetime.SINGLETON),
 
   /** Fuse **/
@@ -62,10 +55,29 @@ container.register({
   }).setLifetime(Lifetime.SINGLETON),
 
   /** Repositories, services, configuration **/
-  articleRepository: asClass(FileSystemArticleRepository, { lifetime: Lifetime.SINGLETON }),
-  articleContentRepository: asClass(ViteArticleContentRepository, { lifetime: Lifetime.SINGLETON }),
-  categoryRepository: asClass(FileSystemCategoryRepository, { lifetime: Lifetime.SINGLETON }),
-  tagRepository: asClass(FileSystemTagRepository, { lifetime: Lifetime.SINGLETON }),
+  articleRepository: asFunction(() => {
+    return new FileSystemArticleRepository(
+      container.resolve('articles'),
+      container.resolve('categories'),
+      container.resolve('tags'),
+      container.resolve('articlesFuse')
+    )
+  }, { lifetime: Lifetime.SINGLETON }),
+  articleContentRepository: asFunction(() => {
+    return new ViteArticleContentRepository(container.resolve('loggerService'))
+  }, { lifetime: Lifetime.SINGLETON }),
+  categoryRepository: asFunction(() => {
+    return new FileSystemCategoryRepository(
+      container.resolve('articles'),
+      container.resolve('categories')
+    )
+  }, { lifetime: Lifetime.SINGLETON }),
+  tagRepository: asFunction(() => {
+    return new FileSystemTagRepository(
+      container.resolve('articles'),
+      container.resolve('tags')
+    )
+  }, { lifetime: Lifetime.SINGLETON }),
 
   loggerService: asFunction(() => {
     return new PinoLoggerService(pino(loggerOptions))

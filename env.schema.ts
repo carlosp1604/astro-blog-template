@@ -2,26 +2,6 @@ import path from 'path'
 import { z } from 'zod'
 
 const PROJECT_ROOT = process.cwd()
-const DATA_SANDBOX_ROOT = path.join(PROJECT_ROOT, 'data')
-
-const DataPathSchema = z
-  .string()
-  .min(1, 'Path must not be empty')
-  .refine((value) => !value.includes('..'), { message: 'Path cannot contain \'..\'' })
-  .refine((value) => !path.isAbsolute(value), { message: 'Path must be relative (start with ./ or just the name)' })
-  .transform((value) => {
-    return value.startsWith('./') ? value : `./${value}`
-  })
-  .refine(
-    (value) => {
-      const resolvedPath = path.resolve(PROJECT_ROOT, value)
-
-      return resolvedPath.startsWith(DATA_SANDBOX_ROOT)
-    },
-    {
-      message: 'Security Error: Data paths must be located inside the \'/data\' directory.'
-    }
-  )
 
 const AssetPathSchema = z.union([
   z.url(),
@@ -58,10 +38,6 @@ export const EnvSchema = z
     PAGINATION_MIN_PAGE_SIZE: z.coerce.number().int().positive().default(12),
 
     PUBLIC_DEFAULT_PAGE_SIZE: z.coerce.number().int().positive().default(36),
-
-    ARTICLES_DATA_PATH: DataPathSchema,
-    CATEGORIES_DATA_PATH: DataPathSchema,
-    TAGS_DATA_PATH: DataPathSchema,
 
     PUBLIC_SITE_BASE_URL: z.url().transform((url) => {
       return url.endsWith('/') ? url.slice(0, -1) : url

@@ -9,10 +9,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "preview:cf": "yarn build && wrangler pages dev ./dist",
     "astro": "astro",
     "lint": "eslint . --ext .ts,.tsx,.astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/mdx": "^4.3.12",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
@@ -43,6 +45,7 @@
     "globals": "^16.3.0",
     "pino-pretty": "^13.1.2",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.40.0"
+    "typescript-eslint": "^8.40.0",
+    "wrangler": "^4.51.0"
   }
 }
