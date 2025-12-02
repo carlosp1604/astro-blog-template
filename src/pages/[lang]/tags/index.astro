@@ -21,6 +21,8 @@ if (loadPageResult instanceof Response) {
 }
 
 const { pageTitle, pageDescription, lang, tags, pagination } = loadPageResult
+
+export const prerender = true
 ---
 
 <TagsLayout pagination={pagination} lang={lang} >

@@ -28,4 +28,4 @@ pnpm-debug.log*
 .vscode/
 
 #
-public/.assetsignore
+.vercel/

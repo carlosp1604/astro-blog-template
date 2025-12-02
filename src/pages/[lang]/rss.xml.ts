@@ -12,6 +12,8 @@ import {
   DEFAULT_ARTICLE_SORT
 } from '@/modules/Shared/Infrastructure/Frontend/ArticleSortOptions.ts'
 
+export const prerender = true
+
 export async function getStaticPaths() {
   const paths = []
 

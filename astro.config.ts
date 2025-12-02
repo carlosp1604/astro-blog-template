@@ -4,18 +4,13 @@ import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 import { i18nGlobalConfig } from './i18n.global.config'
-import cloudflare from '@astrojs/cloudflare'
+import vercel from '@astrojs/vercel'
 
 // https://astro.build/config
 export default defineConfig({
   site: import.meta.env.PUBLIC_SITE_BASE_URL,
   output: 'server',
-  adapter: cloudflare({
-    imageService: 'passthrough',
-    platformProxy: {
-      enabled: true
-    }
-  }),
+
   vite: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
@@ -48,5 +43,11 @@ export default defineConfig({
       redirectToDefaultLocale: true,
       prefixDefaultLocale: true
     }
-  }
+  },
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true
+    },
+    imageService: false
+  })
 })
