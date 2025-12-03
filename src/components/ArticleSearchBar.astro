@@ -21,13 +21,15 @@ const submitButtonTitle = await t(lang, 'articles', 'articles_page_search_bar_su
   action={searchAction}
   class="flex gap-2 w-full overflow-hidden"
 >
-  <label for="search-input" class="sr-only">{inputLabelTitle}</label>
+  <label for="search-input" class="sr-only">
+    {inputLabelTitle}
+  </label>
   <input
     type="search"
     id="search-input"
     name="title"
     placeholder={inputPlaceholderTitle}
-    class="[&::-webkit-search-cancel-button]:appearance-none min-w-0 px-4 py-2 rounded-md bg-app-surface text-app-text placeholder-app-text-secondary focus:bg-app-hover outline-none"
+    class="[&::-webkit-search-cancel-button]:appearance-none min-w-0 w-full px-4 py-2 rounded-md bg-app-surface text-app-text placeholder-app-text-secondary focus:bg-app-hover outline-none"
   />
 
   <button

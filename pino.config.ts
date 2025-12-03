@@ -7,5 +7,15 @@ export const loggerOptions: LoggerOptions = {
     pid: false,
     hostname: false
   },
-  timestamp: () => `,"time":"${new Date().toISOString()}"`
+  timestamp: () => `,"time":"${new Date().toISOString()}"`,
+  transport: env.isProduction
+    ? undefined
+    : {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'SYS:standard',
+        ignore: 'pid,hostname'
+      }
+    }
 }

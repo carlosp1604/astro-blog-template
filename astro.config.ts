@@ -1,22 +1,26 @@
 // @ts-check
 import mdx from '@astrojs/mdx'
+import vercel from '@astrojs/vercel'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 import { i18nGlobalConfig } from './i18n.global.config'
-import vercel from '@astrojs/vercel'
 
 // https://astro.build/config
 export default defineConfig({
   site: import.meta.env.PUBLIC_SITE_BASE_URL,
   output: 'server',
-
   vite: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     plugins: [ tailwindcss() ]
   },
-
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true
+    },
+    imageService: false
+  }),
   integrations: [
     mdx(),
     sitemap({
@@ -33,9 +37,7 @@ export default defineConfig({
         page !== import.meta.env.PUBLIC_SITE_BASE_URL + '/500/'
     })
   ],
-
   trailingSlash: 'always',
-
   i18n: {
     defaultLocale: i18nGlobalConfig.defaultLocale as never,
     locales: [ ...i18nGlobalConfig.locales ],
@@ -43,11 +45,5 @@ export default defineConfig({
       redirectToDefaultLocale: true,
       prefixDefaultLocale: true
     }
-  },
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true
-    },
-    imageService: false
-  })
+  }
 })

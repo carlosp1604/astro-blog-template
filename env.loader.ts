@@ -20,6 +20,8 @@ export function loadEnvFile(): void {
   }
 }
 
+loadEnvFile()
+
 const parsedEnv = EnvSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
